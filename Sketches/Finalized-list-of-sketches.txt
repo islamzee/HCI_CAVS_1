@@ -1,0 +1,8 @@
+- Previous Run logs 
+- Waypoints and Distance (Path planning)
+- Obstacle detection
+- Camera views
+- Faults
+- Color coded faults
+- Dashboard on bottom view
+- LIDAR and Camera Previews 
