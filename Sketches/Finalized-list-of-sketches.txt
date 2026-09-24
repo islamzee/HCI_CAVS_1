@@ -1,8 +1,20 @@
-- Previous Run logs 
-- Waypoints and Distance (Path planning)
-- Obstacle detection
-- Camera views
-- Faults
-- Color coded faults
-- Dashboard on bottom view
-- LIDAR and Camera Previews 
+- Nathan:
+	- Waypoints and Distance (Path planning)
+	(Color coded faults)
+	- Obstacle detection
+
+- Chuck:
+	- Previous Run logs
+	- Status
+
+- Caleb:
+	- Sensor Preview
+	- Faults
+		Color coded faults
+
+- Zeenat:
+	- Dashboard
+
+
+
+
