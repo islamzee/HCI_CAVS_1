@@ -1,0 +1,1892 @@
+{
+ "cams": [
+  {
+   "frame": "cam_0",
+   "exposure_us": 9002,
+   "gain": 0.0,
+   "brightness": 0,
+   "image_stamp": 8129.347054576,
+   "width": 2048,
+   "height": 1536,
+   "encoding": "mono8"
+  },
+  {
+   "frame": "cam_1",
+   "exposure_us": 9002,
+   "gain": 0.0,
+   "brightness": 0,
+   "image_stamp": 8127.825393928,
+   "width": 2048,
+   "height": 1536,
+   "encoding": "mono8"
+  },
+  {
+   "frame": "cam_2",
+   "exposure_us": 9002,
+   "gain": 0.0,
+   "brightness": 0,
+   "image_stamp": 8128.645976448,
+   "width": 2048,
+   "height": 1536,
+   "encoding": "mono8"
+  }
+ ],
+ "reflec": {
+  "t": 14.243567265,
+  "w": 1024,
+  "h": 128,
+  "encoding": "mono16",
+  "stamp": 1789145162.187482
+ },
+ "telemetry": {
+  "thermal_shutdown": 0,
+  "shot_limiting": 0,
+  "countdown_thermal_shutdown": 0,
+  "countdown_shot_limiting": 0
+ },
+ "lidar_age_s": 0.005842447280883789,
+ "events": [
+  {
+   "t": 0.227711016,
+   "src": "/mtx/velocity_filter/status",
+   "level": 30,
+   "node": "velocity_filter",
+   "msg": "ok=false inhibit_reasons=no_cmd"
+  },
+  {
+   "t": 8.076367337,
+   "src": "/rosout",
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=AUTONOMY autonomy_requested=True autonomy_active=False reasons=['no_autonomy_cmd_received']"
+  },
+  {
+   "t": 8.080151625,
+   "src": "/rosout",
+   "level": 30,
+   "node": "web_ui",
+   "msg": "web: operator sent NavigateThroughPoses 2 wp (2 points)"
+  },
+  {
+   "t": 8.148478212,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once."
+  },
+  {
+   "t": 8.148536362,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once."
+  },
+  {
+   "t": 8.174708677,
+   "src": "/rosout",
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=AUTONOMY autonomy_requested=True autonomy_active=True reasons=[]"
+  },
+  {
+   "t": 15.049657301,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.099534704,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.149718589,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.199817214,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.249775761,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.299527372,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.349766234,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.39958135,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.449886516,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.499522881,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.499612246,
+   "src": "/rosout",
+   "level": 40,
+   "node": "controller_server",
+   "msg": "Controller patience exceeded"
+  },
+  {
+   "t": 15.499922665,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "[follow_path] [ActionServer] Aborting handle."
+  },
+  {
+   "t": 15.638993959,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "Control loop missed its desired rate of 20.0000 Hz. Current loop rate is 8.2623 Hz."
+  },
+  {
+   "t": 23.17763719,
+   "src": "/mtx/nav/collision_monitor_state",
+   "level": 30,
+   "node": "collision_monitor",
+   "msg": "action_type=2 polygon=SlowdownZone"
+  },
+  {
+   "t": 23.179122512,
+   "src": "/rosout",
+   "level": 30,
+   "node": "web_ui",
+   "msg": "collision monitor: action 2 due to 'SlowdownZone'"
+  },
+  {
+   "t": 23.37712403,
+   "src": "/mtx/nav/collision_monitor_state",
+   "level": 20,
+   "node": "collision_monitor",
+   "msg": "action_type=0 polygon=(none)"
+  },
+  {
+   "t": 24.441564798,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.490333264,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.542847393,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.590410101,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.642357795,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.690351087,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.740612204,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.790343915,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.99073455,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.040695626,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.09074688,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.241949289,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.290292365,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.341690249,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.390843443,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.441631434,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.490267848,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.541650969,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.590282855,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.640608623,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.690495961,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.690572385,
+   "src": "/rosout",
+   "level": 40,
+   "node": "controller_server",
+   "msg": "Controller patience exceeded"
+  },
+  {
+   "t": 25.690997681,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "[follow_path] [ActionServer] Aborting handle."
+  },
+  {
+   "t": 38.067287532,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 38.117968551,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 38.168120483,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 38.218000426,
+   "src": "/rosout",
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 64.720407526,
+   "src": "/rosout",
+   "level": 40,
+   "node": "web_ui",
+   "msg": "web: STOP pressed by operator"
+  },
+  {
+   "t": 64.722101998,
+   "src": "/rosout",
+   "level": 40,
+   "node": "web_ui",
+   "msg": "web: STOP cancel-all sent to 3 action server(s)"
+  },
+  {
+   "t": 64.722478717,
+   "src": "/mtx/estop",
+   "level": 40,
+   "node": "estop",
+   "msg": "data=true"
+  },
+  {
+   "t": 64.726587627,
+   "src": "/rosout",
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=MANUAL autonomy_requested=False autonomy_active=False reasons=['latched_off:disabled_by_service']"
+  },
+  {
+   "t": 64.7293634,
+   "src": "/rosout",
+   "level": 40,
+   "node": "command_arbiter",
+   "msg": "SOFTWARE E-STOP LATCHED: stop burst, then silence. Release via estop topic."
+  },
+  {
+   "t": 64.730981149,
+   "src": "/rosout",
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=ESTOP autonomy_requested=False autonomy_active=False reasons=['estop']"
+  },
+  {
+   "t": 64.746520805,
+   "src": "/rosout",
+   "level": 40,
+   "node": "bt_navigator_navigate_through_poses_rclcpp_node",
+   "msg": "Failed to get result for follow_path in node halt!"
+  },
+  {
+   "t": 64.770410575,
+   "src": "/rosout",
+   "level": 30,
+   "node": "web_ui",
+   "msg": "web: goal finished CANCELED"
+  },
+  {
+   "t": 66.275045866,
+   "src": "/mtx/velocity_filter/status",
+   "level": 30,
+   "node": "velocity_filter",
+   "msg": "ok=false inhibit_reasons=cmd_stale"
+  },
+  {
+   "t": 67.519061121,
+   "src": "/mtx/estop",
+   "level": 20,
+   "node": "estop",
+   "msg": "data=false"
+  },
+  {
+   "t": 67.519988071,
+   "src": "/rosout",
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "software e-stop released; MANUAL, silent until joystick or service"
+  },
+  {
+   "t": 67.520557092,
+   "src": "/rosout",
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=MANUAL autonomy_requested=False autonomy_active=False reasons=['latched_off:estop']"
+  },
+  {
+   "t": 67.521090908,
+   "src": "/rosout",
+   "level": 30,
+   "node": "web_ui",
+   "msg": "web: software e-stop CLEARED by operator"
+  }
+ ],
+ "bag": {
+  "name": "autonomy_demo_0",
+  "start_ns": 1789145148161676535,
+  "duration_ns": 72114425913,
+  "messages": 124845,
+  "ros_distro": "jazzy",
+  "storage": "mcap"
+ },
+ "rosout": [
+  {
+   "t": 0.0,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Press SPACE for pausing/resuming"
+  },
+  {
+   "t": 1.712e-05,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Event publisher thread: Started"
+  },
+  {
+   "t": 2.116e-05,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Starting recording to 'autonomy_demo'"
+  },
+  {
+   "t": 0.000155513,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/rosout'"
+  },
+  {
+   "t": 0.001111013,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/events/write_split'"
+  },
+  {
+   "t": 0.001237212,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Listening for topics..."
+  },
+  {
+   "t": 0.001247035,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Recording..."
+  },
+  {
+   "t": 0.001444006,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Topics discovery started."
+  },
+  {
+   "t": 0.094520123,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/parameter_events'"
+  },
+  {
+   "t": 0.103184547,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/bond'"
+  },
+  {
+   "t": 0.106521418,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/diagnostics'"
+  },
+  {
+   "t": 0.110047301,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/nav/cmd_vel_smoothed'"
+  },
+  {
+   "t": 0.115332032,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/drive_bridge/tx_debug'"
+  },
+  {
+   "t": 0.119506923,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/velocity_smoother/transition_event'"
+  },
+  {
+   "t": 0.174746375,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.20 Hz  OUT:   0.00 Hz drop   0% LIS off[s]: 1789137033.0867"
+  },
+  {
+   "t": 0.174773136,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:   0.00 Hz drop   0% LIS off[s]: 1789137033.0867"
+  },
+  {
+   "t": 0.209220037,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/tf_static'"
+  },
+  {
+   "t": 0.212338581,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/velocity_filter/status'"
+  },
+  {
+   "t": 0.213656116,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/cmd_vel_autonomy'"
+  },
+  {
+   "t": 0.217435292,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/map'"
+  },
+  {
+   "t": 0.219224604,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_0/meta'"
+  },
+  {
+   "t": 0.222042144,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_0/camera_info'"
+  },
+  {
+   "t": 0.22363427,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/joy'"
+  },
+  {
+   "t": 0.228027602,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_0/image_raw'"
+  },
+  {
+   "t": 0.229009099,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/behavior_server/transition_event'"
+  },
+  {
+   "t": 0.233383814,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/nav/cmd_vel_controller'"
+  },
+  {
+   "t": 0.234846966,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/lookahead_point'"
+  },
+  {
+   "t": 0.24119333,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/voxel_layer_raw'"
+  },
+  {
+   "t": 0.243412905,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/lookahead_collision_arc'"
+  },
+  {
+   "t": 0.246073407,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/voxel_layer_updates'"
+  },
+  {
+   "t": 0.247821945,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/published_footprint'"
+  },
+  {
+   "t": 0.248697222,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/os_driver/transition_event'"
+  },
+  {
+   "t": 0.250567369,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/odom'"
+  },
+  {
+   "t": 0.25143976,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/clearing_endpoints'"
+  },
+  {
+   "t": 0.252811616,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/is_rotating_to_heading'"
+  },
+  {
+   "t": 0.253687051,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/curvature_lookahead_point'"
+  },
+  {
+   "t": 0.254550591,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/controller_server/transition_event'"
+  },
+  {
+   "t": 0.255416746,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/received_global_plan'"
+  },
+  {
+   "t": 0.256924327,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/costmap'"
+  },
+  {
+   "t": 0.25827528,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/costmap_raw_updates'"
+  },
+  {
+   "t": 0.259262381,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/dlio/odom_node/odom'"
+  },
+  {
+   "t": 0.260163854,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/costmap_raw'"
+  },
+  {
+   "t": 0.261063268,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/costmap_updates'"
+  },
+  {
+   "t": 0.262119923,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/voxel_layer_raw_updates'"
+  },
+  {
+   "t": 0.263044365,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/voxel_layer'"
+  },
+  {
+   "t": 0.263941959,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/local_costmap/local_costmap/transition_event'"
+  },
+  {
+   "t": 0.298007755,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:   0.00 Hz drop   0% LIS off[s]: 1789137034.5784 INCOMPLETE:   1 SKIPPED:   1"
+  },
+  {
+   "t": 0.298024085,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.20 Hz  OUT:   0.00 Hz drop   0% LIS off[s]: 1789137034.5859"
+  },
+  {
+   "t": 0.321892789,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/points'"
+  },
+  {
+   "t": 0.323104378,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:   0.00 Hz drop   0% LIS off[s]: 1789137034.5885"
+  },
+  {
+   "t": 0.332081206,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/scan'"
+  },
+  {
+   "t": 0.33400707,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/dlio/odom_node/pose'"
+  },
+  {
+   "t": 0.343964402,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/range_image'"
+  },
+  {
+   "t": 0.346679614,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/metadata'"
+  },
+  {
+   "t": 0.351463887,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/dlio/odom_node/keyframes'"
+  },
+  {
+   "t": 0.354904541,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/tf'"
+  },
+  {
+   "t": 0.358507986,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/dlio/odom_node/pointcloud/deskewed'"
+  },
+  {
+   "t": 0.361296991,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/imu'"
+  },
+  {
+   "t": 0.362997888,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/dlio/odom_node/pointcloud/keyframe'"
+  },
+  {
+   "t": 0.364668252,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/nearir_image'"
+  },
+  {
+   "t": 0.366189642,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/signal_image'"
+  },
+  {
+   "t": 0.36763474,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/reflec_image'"
+  },
+  {
+   "t": 0.371128189,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/ouster/telemetry'"
+  },
+  {
+   "t": 0.373622348,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/dlio/odom_node/path'"
+  },
+  {
+   "t": 0.387338439,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/collision_monitor/collision_points_marker'"
+  },
+  {
+   "t": 0.388246494,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_1/image_raw'"
+  },
+  {
+   "t": 0.389053041,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/nav/stop_zone'"
+  },
+  {
+   "t": 0.389795455,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/cmd_vel_nav'"
+  },
+  {
+   "t": 0.39052496,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/goal_pose'"
+  },
+  {
+   "t": 0.391353072,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/planner_server/transition_event'"
+  },
+  {
+   "t": 0.392191986,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/estop'"
+  },
+  {
+   "t": 0.392950305,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/nav/slowdown_zone'"
+  },
+  {
+   "t": 0.394244938,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/collision_monitor/transition_event'"
+  },
+  {
+   "t": 0.395211607,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/drive_command'"
+  },
+  {
+   "t": 0.396000999,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_2/image_raw'"
+  },
+  {
+   "t": 0.396813155,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/clicked_point'"
+  },
+  {
+   "t": 0.39851715,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/initialpose'"
+  },
+  {
+   "t": 0.40851904,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:   0.00 Hz drop   0% LIS off[s]: 1789137033.7804 INCOMPLETE:   1 SKIPPED:   1"
+  },
+  {
+   "t": 0.408548134,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:   0.00 Hz drop   0% LIS off[s]: 1789137033.7802"
+  },
+  {
+   "t": 0.410145776,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_1/meta'"
+  },
+  {
+   "t": 0.411134606,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/arbiter_status'"
+  },
+  {
+   "t": 0.41193964,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_2/camera_info'"
+  },
+  {
+   "t": 0.41496795,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/mtx/nav/collision_monitor_state'"
+  },
+  {
+   "t": 0.416119283,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_2/meta'"
+  },
+  {
+   "t": 0.417212083,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/cam_1/camera_info'"
+  },
+  {
+   "t": 0.477180089,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/plan'"
+  },
+  {
+   "t": 0.48052409,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/costmap'"
+  },
+  {
+   "t": 0.482277489,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/global_costmap/transition_event'"
+  },
+  {
+   "t": 0.496715647,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/published_footprint'"
+  },
+  {
+   "t": 0.498191288,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/obstacle_layer_updates'"
+  },
+  {
+   "t": 0.499643704,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/obstacle_layer_raw'"
+  },
+  {
+   "t": 0.501110619,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/costmap_raw'"
+  },
+  {
+   "t": 0.50570448,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/obstacle_layer_raw_updates'"
+  },
+  {
+   "t": 0.50736763,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/costmap_updates'"
+  },
+  {
+   "t": 0.50888408,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/obstacle_layer'"
+  },
+  {
+   "t": 0.510312626,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/global_costmap/costmap_raw_updates'"
+  },
+  {
+   "t": 1.146965229,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/behavior_tree_log'"
+  },
+  {
+   "t": 1.149899675,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Subscribed to topic '/bt_navigator/transition_event'"
+  },
+  {
+   "t": 1.275385162,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.20 Hz  OUT:   3.40 Hz drop   0% LIS off[s]: 1789137033.7795"
+  },
+  {
+   "t": 4.351731538,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  15.60 Hz drop   0% LIS off[s]: 1789137033.0866"
+  },
+  {
+   "t": 5.323161174,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  18.80 Hz drop   0% LIS off[s]: 1789137034.5881"
+  },
+  {
+   "t": 6.275406557,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.7788"
+  },
+  {
+   "t": 8.074245266,
+   "level": 20,
+   "node": "command_arbiter",
+   "msg": "set_autonomy(True): autonomy enabled; waiting for fresh commands"
+  },
+  {
+   "t": 8.076367337,
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=AUTONOMY autonomy_requested=True autonomy_active=False reasons=['no_autonomy_cmd_received']"
+  },
+  {
+   "t": 8.080151625,
+   "level": 30,
+   "node": "web_ui",
+   "msg": "web: operator sent NavigateThroughPoses 2 wp (2 points)"
+  },
+  {
+   "t": 8.12571504,
+   "level": 20,
+   "node": "bt_navigator",
+   "msg": "Begin navigating from current location through 2 poses to (14.50, -12.29)"
+  },
+  {
+   "t": 8.148350946,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Received a goal, begin computing control effort."
+  },
+  {
+   "t": 8.148478212,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once."
+  },
+  {
+   "t": 8.148536362,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once."
+  },
+  {
+   "t": 8.174588231,
+   "level": 20,
+   "node": "velocity_filter",
+   "msg": "autonomy output ENABLED (all inputs healthy)"
+  },
+  {
+   "t": 8.174708677,
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=AUTONOMY autonomy_requested=True autonomy_active=True reasons=[]"
+  },
+  {
+   "t": 9.35222089,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.20 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.0905 INCOMPLETE:   1 SKIPPED:   1"
+  },
+  {
+   "t": 10.323310116,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.20 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137034.5878"
+  },
+  {
+   "t": 11.198869494,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 11.27545801,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.20 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.7783"
+  },
+  {
+   "t": 14.248892311,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 14.351945492,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  18.80 Hz drop   0% LIS off[s]: 1789137033.0953 INCOMPLETE:   1 SKIPPED:   1"
+  },
+  {
+   "t": 15.049657301,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.099534704,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.149718589,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.199817214,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.249775761,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.299527372,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.323050009,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137034.5881"
+  },
+  {
+   "t": 15.349766234,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.39958135,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.449886516,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.499522881,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 15.499612246,
+   "level": 40,
+   "node": "controller_server",
+   "msg": "Controller patience exceeded"
+  },
+  {
+   "t": 15.499922665,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "[follow_path] [ActionServer] Aborting handle."
+  },
+  {
+   "t": 15.516803686,
+   "level": 20,
+   "node": "local_costmap.local_costmap",
+   "msg": "Received request to clear entirely the local_costmap"
+  },
+  {
+   "t": 15.517827947,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Received a goal, begin computing control effort."
+  },
+  {
+   "t": 15.638993959,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "Control loop missed its desired rate of 20.0000 Hz. Current loop rate is 8.2623 Hz."
+  },
+  {
+   "t": 16.275461942,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137033.7783"
+  },
+  {
+   "t": 17.23921932,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 19.351625264,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.0944"
+  },
+  {
+   "t": 20.289158788,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 20.322999744,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137034.5882"
+  },
+  {
+   "t": 21.275427418,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  18.20 Hz drop   0% LIS off[s]: 1789137033.7911 INCOMPLETE:   4 SKIPPED:   4"
+  },
+  {
+   "t": 23.177372328,
+   "level": 20,
+   "node": "collision_monitor",
+   "msg": "Robot to slowdown for 40.000000 percents due to SlowdownZone polygon"
+  },
+  {
+   "t": 23.179122512,
+   "level": 30,
+   "node": "web_ui",
+   "msg": "collision monitor: action 2 due to 'SlowdownZone'"
+  },
+  {
+   "t": 23.339154754,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 23.377079798,
+   "level": 20,
+   "node": "collision_monitor",
+   "msg": "Robot to continue normal operation"
+  },
+  {
+   "t": 23.378286391,
+   "level": 20,
+   "node": "web_ui",
+   "msg": "collision monitor: clear"
+  },
+  {
+   "t": 24.351688909,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.20 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.0935"
+  },
+  {
+   "t": 24.441564798,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.490333264,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.542847393,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.590410101,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.642357795,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.690351087,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.740612204,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.790343915,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 24.99073455,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.040695626,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.09074688,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.241949289,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.290292365,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.323030354,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.20 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137034.5879"
+  },
+  {
+   "t": 25.341690249,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.390843443,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.441631434,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.490267848,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.541650969,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.590282855,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.640608623,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.690495961,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 25.690572385,
+   "level": 40,
+   "node": "controller_server",
+   "msg": "Controller patience exceeded"
+  },
+  {
+   "t": 25.690997681,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "[follow_path] [ActionServer] Aborting handle."
+  },
+  {
+   "t": 25.706401614,
+   "level": 20,
+   "node": "local_costmap.local_costmap",
+   "msg": "Received request to clear entirely the local_costmap"
+  },
+  {
+   "t": 25.707955237,
+   "level": 20,
+   "node": "global_costmap.global_costmap",
+   "msg": "Received request to clear entirely the global_costmap"
+  },
+  {
+   "t": 26.275387826,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  18.00 Hz drop   0% LIS off[s]: 1789137033.8035 INCOMPLETE:   5 SKIPPED:   5"
+  },
+  {
+   "t": 26.416735965,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Received a goal, begin computing control effort."
+  },
+  {
+   "t": 29.351651705,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137033.0926"
+  },
+  {
+   "t": 29.469235735,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 30.323053456,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137034.5880"
+  },
+  {
+   "t": 31.275484915,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.8028"
+  },
+  {
+   "t": 32.517015399,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 34.351720694,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.0912"
+  },
+  {
+   "t": 35.323141705,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  18.60 Hz drop   0% LIS off[s]: 1789137034.5924 INCOMPLETE:   2 SKIPPED:   2"
+  },
+  {
+   "t": 35.516990904,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 36.275433634,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.20 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137033.8022"
+  },
+  {
+   "t": 38.067287532,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 38.117968551,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 38.168120483,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 38.218000426,
+   "level": 30,
+   "node": "controller_server",
+   "msg": "RegulatedPurePursuitController detected collision ahead!"
+  },
+  {
+   "t": 38.567044746,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 39.35182131,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.20 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137033.0903"
+  },
+  {
+   "t": 40.323034437,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.20 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137034.5917"
+  },
+  {
+   "t": 41.275390026,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  18.80 Hz drop   0% LIS off[s]: 1789137033.8084 INCOMPLETE:   1 SKIPPED:   1"
+  },
+  {
+   "t": 41.566970212,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 44.352372356,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.0892"
+  },
+  {
+   "t": 44.616992625,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 45.323048309,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137034.5924"
+  },
+  {
+   "t": 46.275438504,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.8260"
+  },
+  {
+   "t": 47.617016773,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 49.351793235,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.0883"
+  },
+  {
+   "t": 50.322918789,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137034.5917"
+  },
+  {
+   "t": 50.667014098,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 51.275299605,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.8256"
+  },
+  {
+   "t": 53.667013839,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 54.351708257,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.20 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137033.0873"
+  },
+  {
+   "t": 55.323048815,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.20 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137034.5908"
+  },
+  {
+   "t": 56.275243619,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.20 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137033.8260"
+  },
+  {
+   "t": 56.716972199,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 59.351647031,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.0864"
+  },
+  {
+   "t": 59.717042126,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 60.32305788,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137034.5901"
+  },
+  {
+   "t": 61.27533654,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.8261"
+  },
+  {
+   "t": 62.767020474,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Passing new path to controller."
+  },
+  {
+   "t": 64.351711399,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.0859"
+  },
+  {
+   "t": 64.720407526,
+   "level": 40,
+   "node": "web_ui",
+   "msg": "web: STOP pressed by operator"
+  },
+  {
+   "t": 64.722101998,
+   "level": 40,
+   "node": "web_ui",
+   "msg": "web: STOP cancel-all sent to 3 action server(s)"
+  },
+  {
+   "t": 64.725242162,
+   "level": 20,
+   "node": "command_arbiter",
+   "msg": "set_autonomy(False): autonomy disabled; stop burst sent"
+  },
+  {
+   "t": 64.726587627,
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=MANUAL autonomy_requested=False autonomy_active=False reasons=['latched_off:disabled_by_service']"
+  },
+  {
+   "t": 64.7293634,
+   "level": 40,
+   "node": "command_arbiter",
+   "msg": "SOFTWARE E-STOP LATCHED: stop burst, then silence. Release via estop topic."
+  },
+  {
+   "t": 64.730981149,
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=ESTOP autonomy_requested=False autonomy_active=False reasons=['estop']"
+  },
+  {
+   "t": 64.746520805,
+   "level": 40,
+   "node": "bt_navigator_navigate_through_poses_rclcpp_node",
+   "msg": "Failed to get result for follow_path in node halt!"
+  },
+  {
+   "t": 64.746746367,
+   "level": 20,
+   "node": "bt_navigator",
+   "msg": "[navigate_through_poses] [ActionServer] Client requested to cancel the goal. Cancelling."
+  },
+  {
+   "t": 64.746932634,
+   "level": 20,
+   "node": "bt_navigator",
+   "msg": "Goal canceled"
+  },
+  {
+   "t": 64.767036537,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Waiting for the controller to finish cancellation"
+  },
+  {
+   "t": 64.770410575,
+   "level": 30,
+   "node": "web_ui",
+   "msg": "web: goal finished CANCELED"
+  },
+  {
+   "t": 65.216937654,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "Cancellation was successful. Stopping the robot."
+  },
+  {
+   "t": 65.216968023,
+   "level": 20,
+   "node": "controller_server",
+   "msg": "[follow_path] [ActionServer] Client requested to cancel the goal. Cancelling."
+  },
+  {
+   "t": 65.323036249,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137034.6001"
+  },
+  {
+   "t": 66.275394165,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  18.60 Hz drop   0% LIS off[s]: 1789137033.8368 INCOMPLETE:   2 SKIPPED:   2"
+  },
+  {
+   "t": 67.519988071,
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "software e-stop released; MANUAL, silent until joystick or service"
+  },
+  {
+   "t": 67.520557092,
+   "level": 30,
+   "node": "command_arbiter",
+   "msg": "mode=MANUAL autonomy_requested=False autonomy_active=False reasons=['latched_off:estop']"
+  },
+  {
+   "t": 67.521090908,
+   "level": 30,
+   "node": "web_ui",
+   "msg": "web: software e-stop CLEARED by operator"
+  },
+  {
+   "t": 69.35168928,
+   "level": 30,
+   "node": "cam_0",
+   "msg": "IN:  19.20 Hz  OUT:  19.20 Hz drop   0% LIS off[s]: 1789137033.0864"
+  },
+  {
+   "t": 70.323046949,
+   "level": 30,
+   "node": "cam_1",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137034.5996"
+  },
+  {
+   "t": 71.27541532,
+   "level": 30,
+   "node": "cam_2",
+   "msg": "IN:  19.00 Hz  OUT:  19.00 Hz drop   0% LIS off[s]: 1789137033.8363"
+  },
+  {
+   "t": 72.114425913,
+   "level": 20,
+   "node": "rosbag2_recorder",
+   "msg": "Topics discovery stopped."
+  }
+ ]
+}
