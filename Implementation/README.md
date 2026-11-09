@@ -2,8 +2,9 @@
 
 Author: Zeenat Islam
 
-The recorded bag (`Dataset/autonomy_demo/autonomy_demo_0.mcap`, ROS 2 Jazzy) is replayed inside a Podman pod and
+The recorded run `autonomy_demo_0` (ROS 2 Jazzy, 72 s) is replayed on a loop inside a Podman pod and
 streamed to the browser over a websocket. The browser dashboard connects to `ws://<host>:8765/`.
+The team uses the slim copy in `Dataset/autonomy_demo_slim` (19 MB, in this repo); the full 18 GB bag also works.
 
 ```
  Podman pod "cavs"  (port 8765 published to the host)
@@ -25,6 +26,15 @@ streamed to the browser over a websocket. The browser dashboard connects to `ws:
 To stop, double-click `Implementation\stop-windows.bat`. To get updates, `git pull` and run `start-windows.bat` again.
 
 If something goes wrong, the window says what to do. To see the player's own messages: `podman logs cavs-player`.
+
+### If it doesn't work
+| Problem | Fix |
+|---|---|
+| `git pull` fails with "divergent branches" or "refusing to merge" | The history on `main` was rewritten on 9 Nov 2026. Copy any changes you haven't pushed somewhere safe, then run `git fetch` and `git reset --hard origin/main`. Only needed once, and only if you cloned before that date. |
+| Podman Desktop can't enable WSL, or you have no admin rights (school-managed laptop) | Ask IT, or use a teammate's running pod instead (last row). |
+| "Virtualization is not enabled" | Turn on virtualization (Intel VT-x / AMD-V or SVM) in the BIOS/UEFI settings, then restart. |
+| Pod starts but `http://localhost:8765/` doesn't load | A VPN or antivirus can block WSL networking. Disconnect the VPN and run `start-windows.bat` again. |
+| Your laptop can't run Podman at all | Skip Podman. Connect your front end to a teammate's running pod: `new CavsClient("ws://<their-ip>:8765/")`. You must be on the same network, and campus Wi-Fi may block it. A pod on a Mac accepts these connections. A pod on Windows has not been tried yet. |
 
 Only slim bags go in the repo (`Dataset/*_slim/`, made with `make_slim_bag.sh`). Full bags (18 GB) are over GitHub's 100 MB file limit and stay out (`.gitignore`).
 
