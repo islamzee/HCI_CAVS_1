@@ -103,3 +103,49 @@ Current version: Zeenat_Dashboard_Sketch_v1.pdf (in Sketches/Finalized_Sketches)
 ## 13 Oct 2026 — ROS bag issues list for Dr. Hudson
 - Dr. Hudson asked teams for a list of issues with the 2 ROS bags provided, to fix future bags. Team plans to submit Thursday afternoon before class.
 - Draft: Dataset/ROS_Bag_Issues_v1.md. Bag 1 (autonomy_demo_0): 13 issues. Bag 2 section empty: only one bag is in Dataset/.
+- v2 (13 Oct 2026): item 1 adds the full GPS check (no GPS message types, no GPS in topics or logs, Ouster NMEA/GPS input off); item 2 adds that odometry has no gap over 29 ms. Bag 2 section still empty (second bag not in Dataset/).
+- v3 (13 Oct 2026): same list as Word file, Dataset/ROS_Bag_Issues_v3.docx (landscape, Times New Roman). v2 .md moved to Dataset/_Archive.
+- v4 (13 Oct 2026): 'Evidence' column renamed 'Finding'; 'Request for future bags' column removed.
+- v5 (13 Oct 2026): built from the edited v4 (title, single 'Bag: autonomy_demo_0' heading, no Prepared by / For / Bag 2). Finding column expanded with counts, rates, times and topic names for all 13 issues. Correction: 9 lifecycle transition_event topics (v4 said 11); 23 of 85 topics have 0 messages.
+- v6 (13 Oct 2026): Finding column as bullet points (same content as v5).
+- v7 (13 Oct 2026): removed issues 11 (short run with one manual stop) and 12 (large file); Empty topics renumbered 11.
+
+## Client feedback from Checkpoint 1 (notes received 13 Oct 2026, Checkpoint-1/CAVS Notes.pdf)
+- C-010 Would be helpful to have a log system and be able to clear it.
+- C-011 Ability to configure Hz.
+- C-012 Need to work on settings.
+- C-013 Prefers buttons, default to camera 2.
+- C-014 Keep lighter color scheme or toggle for light mode due to sun.
+- C-015 Stick to visuals, vehicle too loud to hear anything from interface.
+- C-016 They do have coregistered lidar and camera, render an occupancy grid instead of lidar because of computational intensity.
+- C-017 Resolution changes, square meter.
+- C-018 There aren't any faults in the current data, they're going to get us a bag with faults in it.
+- C-019 Two types of problems, one that cascades or one that stays hidden.
+- C-020 Define multiple points (A, B, C) and it calculates intermediate points, but generally just a goal point: starts at 0, 0, goal of about 100, 100.
+- C-021 A lot of high level derived information, good but heavy workload; look at the data closer, mostly raw data.
+
+## 20 Oct 2026 — dashboard changes
+- Checkpoint-1/Dashboard_Changes_v1.md maps C-010 to C-021 to dashboard changes, what the revised sketches already cover, and what is still to add.
+- 20 Oct 2026: Home sketch suggestions in Checkpoint-1/Home_Sketch_Suggestions_v1.md.
+- 20 Oct 2026: Home_Sketch_v1 (.pdf, .png) redraws the team Home sketch with the Checkpoint 1 changes (C-010 to C-021): 6 panels, recorded values at 11:46:02, CAM 0/1/2 buttons with CAM 2 default, occupancy grid with cell size and area, event log with Clear, light/dark toggle, no GPS/COMMS/BATTERY. Generator make_home_sketch_v1.py (uses direct/ and pages/).
+- v2 (20 Oct 2026): occupancy grid panel gets grid lines every 1 m and bold lines every 5 m; legend lists cell size, line spacing and area.
+- v3 (20 Oct 2026): Systems Health keeps status dots only on recorded statuses (safety filter ok flag, Nav2 and drive bridge diagnostics level). Odometry, LiDAR and command ages shown as recorded values with no dot, one decimal (0.4, 5.8, 48.8 ms).
+- v4 (20 Oct 2026): light/dark mode switch removed from the header; light theme only.
+- 22 Oct 2026: Home_Sketch_v4.svg added for Figma (vector, 1640 × 1064, text outlined as shapes).
+- 27 Oct 2026: Figma prototyping. Sensors_v1, Faults_v1, Logs_Past_Runs_v1 and Logs_Run_Detail_v1 exported as SVG (screens from Team_Pages_Sketch_v3, scaled to 1640 wide). Figma_Navigation_Guide_v1.md: frames, hotspots, bottom-bar component, link table, flow start. Map and Settings screens not drawn yet; Sensors/Faults/Logs still in the earlier style.
+
+## 9 Nov 2026 — implementation: bag replay in Podman + websocket bridge
+- New folder Implementation/ (README.md there). Podman pod "cavs": cavs-player runs `ros2 bag play --loop` on autonomy_demo_0 (dashboard topics only); cavs-bridge (rclpy) streams recorded fields as JSON on ws://localhost:8765/. Probe page at http://localhost:8765/.
+- Custom message packages (mtx_nav2_msgs, flir_camera_msgs, ouster_sensor_msgs) rebuilt from the schemas embedded in the .mcap, so the player can publish them.
+- Per-browser camera choice (default CAM 2, C-013) and camera Hz 0.2–10 (C-011). Grids sent as lossless PNG of cell values; colours set in the browser.
+- Measured: player keeps real time; 42.8 kB/s to one browser (within the 50–75 kB/s budget); loop and camera switching work. Camera frames white, as recorded (bag issue 3).
+- Next: dashboard UI (Home first) connecting to the websocket.
+
+## 9 Nov 2026 — team setup (Windows + macOS)
+- Bag removed from the unpushed commit "dataset exploration" (GitHub limit 100 MB/file); file kept on disk. .gitignore (*.mcap, .DS_Store) and .gitattributes (LF for scripts used in Linux containers) added.
+- Implementation/cavs-pod.yaml: `podman kube play` pod, same on Windows and macOS; bag mounted from the named volume "cavs-bag".
+- .github/workflows/container.yml: builds the image for amd64 + arm64 and publishes to ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge.
+- Implementation/make_slim_bag.sh: Dataset/autonomy_demo_slim = dashboard topics + /ouster/imu + /dlio/odom_node/odom, zstd. 18 GB → 19 MB, message counts identical (saturated camera frames compress to almost nothing). Not in git.
+- Repo stays public (decided 9 Nov 2026). Bags only on the team drive, never in the repo or a Release. ghcr.io package to be set public after the first build.
+- 9 Nov 2026: Implementation/Frontend_Data_Guide_v1.md for the team (start the data, connect, topics per module, field reference, gaps). Browser helper client/cavs-client.js + client/example.html. Bridge now sends connect-time history (latest event-topic messages + last 200 /rosout lines, then history_end) and a playback restart notice when the bag loops.
+- 9 Nov 2026: slim bag Dataset/autonomy_demo_slim committed to the public repo (user's decision; full bag stays ignored). Teammates get it with git pull; no team-drive step.
