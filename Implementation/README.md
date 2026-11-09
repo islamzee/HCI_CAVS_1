@@ -19,18 +19,14 @@ streamed to the browser over a websocket. The browser dashboard connects to `ws:
 ## Windows setup
 
 1. **Install [Podman Desktop](https://podman-desktop.io)** and open it once. Accept its offer to set up WSL and a Podman machine (a restart may be needed).
-2. **Get the bag.** Download the `autonomy_demo_slim` folder from the team drive and put it in `Dataset` in your copy of this repo:
-   ```
-   HCI_CAVS_1\Dataset\autonomy_demo_slim\metadata.yaml
-   HCI_CAVS_1\Dataset\autonomy_demo_slim\autonomy_demo_slim_0.mcap
-   ```
+2. **Clone or pull this repo.** The bag comes with it: `Dataset\autonomy_demo_slim` (19 MB).
 3. **Double-click `Implementation\start-windows.bat`.** The first run downloads about 1 GB. Your browser then opens `http://localhost:8765/`, the probe page with live data.
 
 To stop, double-click `Implementation\stop-windows.bat`. To get updates, `git pull` and run `start-windows.bat` again.
 
 If something goes wrong, the window says what to do. To see the player's own messages: `podman logs cavs-player`.
 
-Never put bags in this repo. It is public, and the bags are CAVS data.
+Only slim bags go in the repo (`Dataset/*_slim/`, made with `make_slim_bag.sh`). Full bags (18 GB) are over GitHub's 100 MB file limit and stay out (`.gitignore`).
 
 **Building a module?** Read [Frontend_Data_Guide_v1.md](Frontend_Data_Guide_v1.md): how to connect, which topics your module needs, and every field.
 

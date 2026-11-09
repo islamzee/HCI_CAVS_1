@@ -37,7 +37,7 @@ if ($Stop) { Write-Host "`nStopped." -ForegroundColor Green; exit 0 }
 # 2. Bag folder
 Step "Checking the bag folder"
 if (-not (Test-Path (Join-Path $Bag "metadata.yaml"))) {
-    Fail "No bag found in:`n  $Bag`nDownload autonomy_demo_slim from the team drive and put the folder there (it must contain metadata.yaml and the .mcap file)."
+    Fail "No bag found in:`n  $Bag`nRun 'git pull' in the repo folder to get Dataset\autonomy_demo_slim (it must contain metadata.yaml and the .mcap file)."
 }
 $full = (Resolve-Path $Bag).Path
 $vmPath = "/mnt/" + $full.Substring(0, 1).ToLower() + ($full.Substring(2) -replace '\\', '/')   # C:\x\y -> /mnt/c/x/y

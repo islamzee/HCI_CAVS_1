@@ -17,7 +17,7 @@ and streams its data as JSON over a websocket. Your page connects to it like any
 
 ## 1. Start the data (every work session)
 
-One-time setup is in [README.md](README.md#windows-setup) (Podman Desktop + the slim bag from the team drive).
+One-time setup is in [README.md](README.md#windows-setup) (install Podman Desktop; the slim bag comes with the repo).
 
 | | Windows | macOS |
 |---|---|---|

@@ -1,7 +1,8 @@
-# ROS bags: too large for GitHub (100 MB per file). Shared outside the repo, see Implementation/README.md
+# Full ROS bags: too large for GitHub (100 MB per file).
+# Slim bags (Dataset/*_slim/, made with Implementation/make_slim_bag.sh) are committed.
 *.mcap
 *.db3
-Dataset/*_slim/
+!Dataset/*_slim/*.mcap
 
 # macOS / Python / R
 .DS_Store
