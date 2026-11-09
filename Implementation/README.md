@@ -16,44 +16,44 @@ streamed to the browser over a websocket. The browser dashboard connects to `ws:
                browser dashboard
 ```
 
-## Team setup (Windows or macOS, once)
+## Windows setup
 
-### 1. Install Podman
-- **Windows:** install [Podman Desktop](https://podman-desktop.io). On first start, let it enable WSL2 and create the Podman machine (4+ CPUs, 8 GB memory). Use PowerShell for the commands below.
-- **macOS:** `brew install podman`, then `podman machine init --cpus 6 --memory 8192 --disk-size 40` and `podman machine start`.
+1. **Install [Podman Desktop](https://podman-desktop.io)** and open it once. Accept its offer to set up WSL and a Podman machine (a restart may be needed).
+2. **Get the bag.** Download the `autonomy_demo_slim` folder from the team drive and put it in `Dataset` in your copy of this repo:
+   ```
+   HCI_CAVS_1\Dataset\autonomy_demo_slim\metadata.yaml
+   HCI_CAVS_1\Dataset\autonomy_demo_slim\autonomy_demo_slim_0.mcap
+   ```
+3. **Double-click `Implementation\start-windows.bat`.** The first run downloads about 1 GB. Your browser then opens `http://localhost:8765/`, the probe page with live data.
 
-### 2. Get the image
-The image is built by GitHub Actions (`.github/workflows/container.yml`) on every push to `main` that changes `Implementation/`, for both Intel/AMD (Windows) and Apple silicon.
+To stop, double-click `Implementation\stop-windows.bat`. To get updates, `git pull` and run `start-windows.bat` again.
+
+If something goes wrong, the window says what to do. To see the player's own messages: `podman logs cavs-player`.
+
+Never put bags in this repo. It is public, and the bags are CAVS data.
+
+**Building a module?** Read [Frontend_Data_Guide_v1.md](Frontend_Data_Guide_v1.md): how to connect, which topics your module needs, and every field.
+
+## macOS setup
+```
+brew install podman
+podman machine init --cpus 6 --memory 8192 --disk-size 40
+podman machine start
+cd Implementation
+BAG_DIR=../Dataset/autonomy_demo_slim ./pod.sh build
+BAG_DIR=../Dataset/autonomy_demo_slim ./pod.sh up
+```
+
+## Details: manual commands (any OS)
+`start-windows.bat` does these steps:
 ```
 podman pull ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest
+podman volume create --opt type=none --opt o=bind --opt device=<bag folder as seen by the Podman machine> cavs-bag
+podman kube play Implementation/cavs-pod.yaml      # stop: podman kube down Implementation/cavs-pod.yaml
 ```
-The repository is public. After the first workflow run, the package owner sets the package to public once
-(GitHub → Packages → cavs-bag-bridge → Package settings → Change visibility), so no login is needed.
-While it is still private: `podman login ghcr.io` with a personal access token that has `read:packages`.
-(Or build it yourself: `podman build -t ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest -f Implementation/Containerfile Implementation`.)
+On Windows, the Podman machine sees `C:\Users\...` as `/mnt/c/Users/...`. To use another bag: `start-windows.bat -Bag D:\path\to\bag`.
 
-### 3. Get the bag and register it as the `cavs-bag` volume
-Bags are never put in this repository: it is public, and the bags are CAVS data (`.gitignore` excludes them).
-They are shared on the team drive. Use the slim bag `autonomy_demo_slim` (19 MB, dashboard topics only, made with `make_slim_bag.sh`) or the full 18 GB bag.
-Put the folder (with `metadata.yaml` and the `.mcap`) somewhere on your disk, then point the volume at it:
-- **Windows** (the Podman machine sees `C:\` as `/mnt/c`):
-  ```
-  podman volume create --opt type=none --opt o=bind --opt device=/mnt/c/Users/<you>/HCI_CAVS_1/Dataset/autonomy_demo_slim cavs-bag
-  ```
-- **macOS:**
-  ```
-  podman volume create --opt type=none --opt o=bind --opt device=/Users/<you>/.../Dataset/autonomy_demo_slim cavs-bag
-  ```
-To switch bags: `podman volume rm cavs-bag` and create it again.
-
-### 4. Run (same on both)
-From the repository root:
-```
-podman kube play Implementation/cavs-pod.yaml     # start
-podman kube down Implementation/cavs-pod.yaml     # stop
-podman logs -f cavs-player                        # or cavs-bridge
-```
-Open `http://localhost:8765/`.
+The image is built by GitHub Actions (`.github/workflows/container.yml`) for Intel/AMD and Apple silicon on every push to `main` that changes `Implementation/`. The image is public, so no login is needed.
 
 ## Run with pod.sh (macOS/Linux, builds the image locally)
 From this folder:
@@ -80,6 +80,9 @@ Check pages:
 | bridge/topics.py | The dashboard topics, send mode and rate, and the recorded fields kept for each. The player also takes its topic list from here |
 | bridge/bridge.py | ROS subscriber + websocket server |
 | bridge/probe.html | Test page served by the bridge |
+| start-windows.bat, stop-windows.bat, start-windows.ps1 | One-click start/stop on Windows (Podman machine, image, bag volume, pod, browser) |
+| Frontend_Data_Guide_v1.md | For module developers: connecting, topics per module, field reference |
+| client/cavs-client.js, client/example.html | Browser helper (connect, reconnect, per-topic callbacks, grid decoding) and a working example |
 | cavs-pod.yaml | Pod definition for `podman kube play` (Windows and macOS) |
 | pod.sh | build / up / down / logs / status / topics (macOS/Linux) |
 | make_slim_bag.sh | Small copy of a bag: dashboard topics only, zstd-compressed (autonomy_demo: 18 GB → 19 MB, same message counts; the saturated camera frames compress to almost nothing) |
@@ -92,6 +95,8 @@ Server → browser, one JSON object per websocket message:
 {"type":"hello", "topics":{topic:{mode,hz}}, "cameras":[...], "camera":2, "camera_hz":2.0, "camera_hz_range":{...}}
 {"type":"msg", "topic":"/mtx/odom", "data":{"stamp":..., "x":..., "linear_x":..., ...}}
 {"type":"settings", "camera":0, "camera_hz":2.0}        (reply to a command)
+{"type":"history_end", "messages":205}                  (after the connect-time history: latest message of each event topic + last 200 /rosout lines)
+{"type":"playback", "event":"restart"}                  (the bag looped back to the start)
 ```
 Browser → server:
 ```

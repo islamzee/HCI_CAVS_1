@@ -24,6 +24,8 @@ from topics import TOPICS, CAMERAS, DEFAULT_CAMERA, CAMERA_HZ, CAMERA_WIDTH, sta
 
 PORT = int(os.environ.get("BRIDGE_PORT", 8765))
 TICK = 0.05                                     # s between send passes per client
+ROSOUT_HISTORY = 200                            # /rosout lines sent to a browser when it connects
+LOOP_TOPIC = "/mtx/odom"                        # stamp going backwards on this topic = bag restarted
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -68,6 +70,10 @@ class Store:
         self.events = deque(maxlen=2000)   # (seq, json)
         self.counts = {}          # topic -> messages received from ROS
         self.wanted_cams = {DEFAULT_CAMERA}
+        # history for browsers that connect mid-run
+        self.last_event = {}      # "all" topic (except /rosout) -> (seq, json) of its latest message
+        self.rosout_tail = deque(maxlen=ROSOUT_HISTORY)   # (seq, json)
+        self.last_odom_stamp = None
 
     def put(self, topic, msg):
         spec = TOPICS.get(topic, {})
@@ -76,8 +82,19 @@ class Store:
         with self.lock:
             self.seq += 1
             self.counts[topic] = self.counts.get(topic, 0) + 1
+            if topic == LOOP_TOPIC:
+                st = stamp(msg.header.stamp)
+                if self.last_odom_stamp is not None and st < self.last_odom_stamp - 1.0:
+                    # bag started again (--loop): history from the previous pass is no longer current
+                    self.last_event.clear(); self.rosout_tail.clear()
+                    self.events.append((self.seq, json.dumps({"type": "playback", "event": "restart"})))
+                    self.seq += 1
+                self.last_odom_stamp = st
             if spec.get("mode") == "all":
-                self.events.append((self.seq, encode(topic, spec["fields"](msg))))
+                e = (self.seq, encode(topic, spec["fields"](msg)))
+                self.events.append(e)
+                if topic == "/rosout": self.rosout_tail.append(e)
+                else: self.last_event[topic] = e
                 return
             prev = self.latest.get(topic)
             key_seq = prev[2] if prev else self.seq
@@ -154,6 +171,8 @@ class Client:
         self.sent_seq, self.sent_t = {}, {}
         with STORE.lock:
             self.ev_seq = STORE.events[-1][0] if STORE.events else 0
+            # latest value of each event topic + recent /rosout, in the order they arrived
+            self.history = [j for _, j in sorted(list(STORE.last_event.values()) + list(STORE.rosout_tail))]
 
 
 def update_wanted_cams():
@@ -207,6 +226,9 @@ async def handler(ws, path=None):
     cl = Client(); CLIENTS[ws] = cl; update_wanted_cams()
     await ws.send(json.dumps({"type": "hello", "topics": {t: {"mode": s["mode"], "hz": s.get("hz")} for t, s in TOPICS.items()},
                               "cameras": CAMERAS, "camera": cl.camera, "camera_hz": cl.camera_hz, "camera_hz_range": CAMERA_HZ}))
+    for j in cl.history:
+        await ws.send(j)
+    await ws.send(json.dumps({"type": "history_end", "messages": len(cl.history)}))
     tasks = [asyncio.create_task(sender(ws, cl)), asyncio.create_task(receiver(ws, cl))]
     try:
         await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)

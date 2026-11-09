@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAVS-1 client example</title>
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 16px; }
+  canvas { border: 1px solid #ccc; image-rendering: pixelated; width: 300px; height: 300px; transform: scaleY(-1); }
+  pre { background: #f4f4f4; padding: 8px; max-height: 200px; overflow: auto; }
+</style>
+</head>
+<body>
+<h1>CAVS-1 client example</h1>
+<p>Status: <b id="status"></b> · Speed: <b id="speed"></b> m/s · Safety filter ok: <b id="ok"></b></p>
+<p><button data-cam="0">CAM 0</button> <button data-cam="1">CAM 1</button> <button data-cam="2">CAM 2</button></p>
+<img id="cam" width="320" alt="camera">
+<canvas id="grid"></canvas>
+<pre id="log"></pre>
+
+<!-- Serve this folder over http (for example: python -m http.server 8000 in Implementation/client),
+     then open http://localhost:8000/example.html. Modules do not load from file://. -->
+<script type="module">
+import { CavsClient, decodeGrid, cameraSrc } from "./cavs-client.js";
+
+const cavs = new CavsClient("ws://localhost:8765/");
+const $ = (id) => document.getElementById(id);
+
+cavs.onStatus((s) => ($("status").textContent = s));
+cavs.on("/mtx/odom", (d) => ($("speed").textContent = d.linear_x.toFixed(2)));
+cavs.on("/mtx/velocity_filter/status", (d) => ($("ok").textContent = d.ok));
+
+for (const c of [0, 1, 2]) cavs.on(`/cam_${c}/image_raw`, (d) => ($("cam").src = cameraSrc(d)));
+document.querySelectorAll("[data-cam]").forEach((b) => (b.onclick = () => cavs.setCamera(+b.dataset.cam)));
+
+cavs.on("/local_costmap/costmap", async (d) => {
+  const g = await decodeGrid(d);
+  const cv = $("grid"); cv.width = g.width; cv.height = g.height;
+  const ctx = cv.getContext("2d"), img = ctx.createImageData(g.width, g.height);
+  g.values.forEach((v, i) => {
+    const shade = v < 0 ? 200 : 255 - Math.round(v * 2.55);   // unknown grey, free white, occupied black
+    img.data.set([shade, shade, shade, 255], i * 4);
+  });
+  ctx.putImageData(img, 0, 0);                                 // canvas is flipped by CSS (row 0 at the bottom)
+});
+
+cavs.on("/rosout", (d) => {
+  if (d.level >= 30) $("log").textContent = `${d.level} ${d.name}: ${d.msg}\n` + $("log").textContent;
+});
+cavs.onRestart(() => ($("log").textContent = "(bag restarted)\n"));
+</script>
+</body>
+</html>
