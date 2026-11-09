@@ -1,0 +1,39 @@
+# Builds the bag player / bridge image for amd64 (Windows/Intel) and arm64 (Apple silicon)
+# and publishes it to ghcr.io/<owner>/<repo>/cavs-bag-bridge
+name: container image
+
+on:
+  push:
+    branches: [main]
+    paths: ["Implementation/**", ".github/workflows/container.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: name
+        run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}/cavs-bag-bridge" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: Implementation
+          file: Implementation/Containerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ steps.name.outputs.image }}:latest
+            ${{ steps.name.outputs.image }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

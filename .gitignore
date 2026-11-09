@@ -1,0 +1,10 @@
+# ROS bags: too large for GitHub (100 MB per file). Shared outside the repo, see Implementation/README.md
+*.mcap
+*.db3
+Dataset/*_slim/
+
+# macOS / Python / R
+.DS_Store
+__pycache__/
+*.pyc
+.Rhistory

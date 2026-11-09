@@ -1,0 +1,34 @@
+# CAVS-1 pod: bag player + websocket bridge. Same file on Windows, macOS and Linux.
+#   podman kube play Implementation/cavs-pod.yaml          start
+#   podman kube down Implementation/cavs-pod.yaml          stop
+# Needs the "cavs-bag" volume (one-time setup, see README.md) and the image from ghcr.io.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cavs
+spec:
+  restartPolicy: Always
+  containers:
+    - name: bridge
+      image: ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest
+      args: ["python3", "/bridge/bridge.py"]
+      ports:
+        - containerPort: 8765
+          hostPort: 8765
+    - name: player
+      image: ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest
+      args:
+        - bash
+        - -c
+        - sleep 3; exec ros2 bag play /bag --loop --rate ${RATE:-1.0} --topics $(python3 /bridge/topics.py)
+      env:
+        - name: RATE
+          value: "1.0"
+      volumeMounts:
+        - name: bag
+          mountPath: /bag
+          readOnly: true
+  volumes:
+    - name: bag
+      persistentVolumeClaim:
+        claimName: cavs-bag

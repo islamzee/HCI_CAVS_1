@@ -1,0 +1,30 @@
+# CAVS-1 bag player + websocket bridge (ROS 2 Jazzy, same distro the bag was recorded with)
+FROM docker.io/library/ros:jazzy-ros-base
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ros-jazzy-rosbag2-storage-mcap \
+      ros-jazzy-nav2-msgs \
+      ros-jazzy-map-msgs \
+      ros-jazzy-visualization-msgs \
+      ros-jazzy-bond \
+      python3-websockets \
+      python3-numpy \
+      python3-pil \
+    && rm -rf /var/lib/apt/lists/*
+
+# Custom message types recorded in the bag (definitions taken from the bag's embedded schemas)
+WORKDIR /ws
+COPY msgs/ src/
+RUN . /opt/ros/jazzy/setup.sh && colcon build --event-handlers console_direct- && rm -rf build log
+
+COPY bridge/ /bridge/
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Fast DDS: use UDP only (no shared memory between the two containers of the pod)
+ENV FASTDDS_BUILTIN_TRANSPORTS=UDPv4 \
+    ROS_DOMAIN_ID=42 \
+    ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]

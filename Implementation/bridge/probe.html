@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAVS-1 bridge probe</title>
+<style>
+  body { font: 13px/1.4 system-ui, sans-serif; margin: 16px; background: #fafaf8; color: #222; }
+  h1 { font-size: 16px; margin: 0 0 8px; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+  table { border-collapse: collapse; background: #fff; }
+  td, th { border: 1px solid #ddd; padding: 3px 6px; text-align: left; vertical-align: top; }
+  td.v { font-family: ui-monospace, monospace; font-size: 11px; max-width: 560px; overflow-wrap: anywhere; }
+  img, canvas { border: 1px solid #ccc; background: #eee; image-rendering: pixelated; }
+  button.on { background: #222; color: #fff; }
+  #status { font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>CAVS-1 bridge probe <span id="status">connecting…</span></h1>
+<p>Checks the websocket stream from the bag player. Not the dashboard. <span id="rate"></span></p>
+<div class="row">
+  <div>
+    <div>
+      <button data-cam="0">CAM 0</button><button data-cam="1">CAM 1</button><button data-cam="2">CAM 2</button>
+      &nbsp; Hz <input id="hz" type="number" step="0.5" min="0.2" max="10" style="width:4em">
+    </div>
+    <img id="cam" width="480" alt="camera"><div id="camInfo"></div>
+    <p>/local_costmap/voxel_layer</p>
+    <canvas id="grid" width="300" height="300"></canvas><div id="gridInfo"></div>
+  </div>
+  <table><thead><tr><th>topic</th><th>n</th><th>latest data</th></tr></thead><tbody id="tb"></tbody></table>
+</div>
+<script>
+const ws = new WebSocket(`ws://${location.host}/`);
+const rows = {}, counts = {};
+let bytes = 0, camTopic = "";
+const $ = id => document.getElementById(id);
+ws.onopen = () => $("status").textContent = "connected";
+ws.onclose = () => $("status").textContent = "closed";
+setInterval(() => { $("rate").textContent = `Receiving ${(bytes / 1024).toFixed(1)} kB/s`; bytes = 0; }, 1000);
+document.querySelectorAll("[data-cam]").forEach(b => b.onclick = () => ws.send(JSON.stringify({cmd: "camera", id: +b.dataset.cam})));
+$("hz").onchange = e => ws.send(JSON.stringify({cmd: "camera_rate", hz: +e.target.value}));
+function settings(m) {
+  camTopic = `/cam_${m.camera}/image_raw`; $("hz").value = m.camera_hz;
+  document.querySelectorAll("[data-cam]").forEach(b => b.classList.toggle("on", +b.dataset.cam === m.camera));
+}
+function drawGrid(d) {
+  const img = new Image();
+  img.onload = () => {
+    const c = $("grid"), x = c.getContext("2d"); c.width = d.width; c.height = d.height;
+    x.drawImage(img, 0, 0); const px = x.getImageData(0, 0, d.width, d.height), p = px.data;
+    for (let i = 0; i < p.length; i += 4) {            // value 0..100 -> white..red, 255 (unknown) -> grey
+      const v = p[i]; let r = 250, g = 250, b = 248;
+      if (v === 255) { r = g = 236; b = 232; } else if (v >= 99) { r = 200; g = 70; b = 60; }
+      else if (v > 0) { r = 250 - 20 * v / 99; g = 250 - 100 * v / 99; b = 248 - 140 * v / 99; }
+      p[i] = r; p[i + 1] = g; p[i + 2] = b;
+    }
+    x.putImageData(px, 0, 0);
+    c.style.transform = "scaleY(-1)"; c.style.width = c.style.height = "300px";
+  };
+  img.src = "data:image/png;base64," + d.png;
+  $("gridInfo").textContent = `${d.width}×${d.height} cells, ${d.resolution} m/cell, origin (${d.origin_x.toFixed(2)}, ${d.origin_y.toFixed(2)})`;
+}
+ws.onmessage = ev => {
+  bytes += ev.data.length;
+  const m = JSON.parse(ev.data);
+  if (m.type === "hello" || m.type === "settings") return settings(m);
+  const t = m.topic, d = m.data; counts[t] = (counts[t] || 0) + 1;
+  if (t === camTopic) {
+    $("cam").src = "data:image/jpeg;base64," + d.jpeg;
+    $("camInfo").textContent = `${t}  ${d.width}×${d.height} ${d.encoding}  stamp ${d.stamp.toFixed(3)}`;
+  }
+  if (t === "/local_costmap/voxel_layer") drawGrid(d);
+  if (!rows[t]) {
+    const tr = document.createElement("tr"); tr.innerHTML = `<td>${t}</td><td></td><td class="v"></td>`;
+    rows[t] = tr; [...$("tb").children, tr].sort((a, b) => a.firstChild.textContent.localeCompare(b.firstChild.textContent)).forEach(r => $("tb").appendChild(r));
+  }
+  const show = {...d}; delete show.png; delete show.jpeg;
+  if (show.poses) show.poses = `[${show.poses.length} poses]`;
+  rows[t].children[1].textContent = counts[t];
+  rows[t].children[2].textContent = JSON.stringify(show).slice(0, 400);
+};
+</script>
+</body>
+</html>

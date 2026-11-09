@@ -1,0 +1,10 @@
+# Normalise text files; keep Linux line endings for files used inside the Linux containers,
+# so a checkout on Windows still runs (CRLF breaks bash scripts).
+* text=auto
+*.sh text eol=lf
+Containerfile text eol=lf
+*.py text eol=lf
+*.msg text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.html text eol=lf

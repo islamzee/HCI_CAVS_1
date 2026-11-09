@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>ouster_sensor_msgs</name>
+  <version>0.0.0</version>
+  <description>Message definitions copied from the schemas embedded in autonomy_demo_0.mcap, so the bag can be replayed. Only the types recorded in the bag.</description>
+  <maintainer email="none@example.com">CAVS-1 team</maintainer>
+  <license>Unknown (definitions from the vehicle software)</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+  <depend>std_msgs</depend>
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
+  <export><build_type>ament_cmake</build_type></export>
+</package>
