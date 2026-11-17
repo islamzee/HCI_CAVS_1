@@ -16,10 +16,10 @@ case "${1:-}" in
     BAG_DIR="$(cd "$BAG_DIR" && pwd)"
     podman pod create --name "$POD" -p "$PORT:8765"
     # bridge first, so it is subscribed before the player starts publishing
-    podman run -d --pod "$POD" --name cavs-bridge "$IMAGE" python3 /bridge/bridge.py
+    podman run -d --pod "$POD" --name cavs-bridge -v "$HERE:/web:ro" -v "$BAG_DIR:/bag:ro" "$IMAGE" python3 /bridge/bridge.py
     podman run -d --pod "$POD" --name cavs-player -v "$BAG_DIR:/bag:ro" "$IMAGE" \
       bash -c "sleep 3; exec ros2 bag play /bag --loop --rate $RATE --topics \$(python3 /bridge/topics.py)"
-    echo "Probe page: http://localhost:$PORT/   websocket: ws://localhost:$PORT/   receive counts: http://localhost:$PORT/stats" ;;
+    echo "Dashboard: http://localhost:$PORT/dashboard/   Probe page: http://localhost:$PORT/   websocket: ws://localhost:$PORT/   receive counts: http://localhost:$PORT/stats" ;;
   down)
     podman pod rm -f "$POD" ;;
   restart)

@@ -12,6 +12,44 @@ if (-not $Bag) { $Bag = Join-Path $Repo "Dataset\autonomy_demo_slim" }
 function Fail($msg) { Write-Host "`n$msg" -ForegroundColor Red; exit 1 }
 function Step($msg) { Write-Host "`n== $msg" -ForegroundColor Cyan }
 
+# Runs when no data arrives: finds which part is not working, prints what to do,
+# and saves everything to cavs-diagnose.txt (send that file to Zeenat if the hint doesn't help).
+function Diagnose {
+    $report = Join-Path $PSScriptRoot "cavs-diagnose.txt"
+    $bagList  = (podman exec cavs-bridge ls -la /bag 2>&1) | Out-String
+    $inside   = (podman exec cavs-bridge python3 -c "import urllib.request;print(urllib.request.urlopen('http://127.0.0.1:8765/stats',timeout=3).read().decode()[:800])" 2>&1) | Out-String
+    $states   = (podman ps -a --pod --format "{{.Names}}  {{.Status}}" 2>&1) | Out-String
+    $lines = @(
+        "== podman machine", ((podman machine list 2>&1) | Out-String),
+        "== containers", $states,
+        "== bag folder inside the pod (should list metadata.yaml and a .mcap)", $bagList,
+        "== bridge /stats from inside the pod", $inside,
+        "== player log (last 30 lines)", ((podman logs --tail 30 cavs-player 2>&1) | Out-String),
+        "== bridge log (last 30 lines)", ((podman logs --tail 30 cavs-bridge 2>&1) | Out-String)
+    )
+    $lines | Out-File -Encoding utf8 $report
+
+    if ($bagList -notmatch "\.mcap") {
+        $hint = "The pod cannot see the bag folder.`n" +
+                "  - Under '== podman machine' above, VM TYPE must be 'wsl'. If it says 'hyperv', delete that machine in Podman Desktop and create a new one with WSL.`n" +
+                "  - If the repo is inside OneDrive (path has 'OneDrive' in it), clone it somewhere else, e.g. C:\HCI_CAVS_1, and run this again.`n" +
+                "  - Check that Dataset\autonomy_demo_slim has the .mcap file (about 19 MB). If it is missing, run 'git pull'."
+    } elseif ($inside -match "/mtx/odom") {
+        $hint = "Data is flowing inside the pod, but Windows cannot reach port 8765.`n" +
+                "  - Try http://127.0.0.1:8765/ in the browser.`n" +
+                "  - Disconnect any VPN, then run this again.`n" +
+                "  - Restart the Podman machine (Podman Desktop > Settings > Resources > restart), then run this again."
+    } elseif ($states -notmatch "cavs-player\s+Up") {
+        $hint = "The bag player is not running. Its log is below."
+    } else {
+        $hint = "The player and bridge are running but no messages reach the bridge."
+    }
+    $lines | ForEach-Object { Write-Host $_ }
+    Write-Host "`nNo data arrived. $hint" -ForegroundColor Red
+    Write-Host "Everything above is saved in $report - send that file to Zeenat if this doesn't fix it." -ForegroundColor Yellow
+    exit 1
+}
+
 if (-not (Get-Command podman -ErrorAction SilentlyContinue)) {
     Fail "Podman is not installed. Install Podman Desktop from https://podman-desktop.io, open it once, then run this again."
 }
@@ -39,9 +77,10 @@ Step "Checking the bag folder"
 if (-not (Test-Path (Join-Path $Bag "metadata.yaml"))) {
     Fail "No bag found in:`n  $Bag`nRun 'git pull' in the repo folder to get Dataset\autonomy_demo_slim (it must contain metadata.yaml and the .mcap file)."
 }
-$full = (Resolve-Path $Bag).Path
-$vmPath = "/mnt/" + $full.Substring(0, 1).ToLower() + ($full.Substring(2) -replace '\\', '/')   # C:\x\y -> /mnt/c/x/y
-Write-Host "Using $full"
+function VmPath($p) { $f = (Resolve-Path $p).Path; "/mnt/" + $f.Substring(0, 1).ToLower() + ($f.Substring(2) -replace '\\', '/') }   # C:\x\y -> /mnt/c/x/y
+$vmPath = VmPath $Bag
+$webPath = VmPath $PSScriptRoot        # Implementation folder: dashboard\ and client\ are served from here
+Write-Host "Using $((Resolve-Path $Bag).Path)"
 
 # 3. Image
 Step "Downloading the latest image (first time ~1 GB)"
@@ -50,21 +89,25 @@ if ($LASTEXITCODE -ne 0) { Fail "Could not download $Image. Check your internet 
 
 # 4. Bag volume + pod
 Step "Starting the pod"
-podman volume rm -f cavs-bag 2>&1 | Out-Null
+podman volume rm -f cavs-bag cavs-web 2>&1 | Out-Null
 podman volume create --opt type=none --opt o=bind --opt "device=$vmPath" cavs-bag | Out-Null
 if ($LASTEXITCODE -ne 0) { Fail "Could not connect the bag folder to Podman." }
+podman volume create --opt type=none --opt o=bind --opt "device=$webPath" cavs-web | Out-Null
+if ($LASTEXITCODE -ne 0) { Fail "Could not connect the dashboard folder to Podman." }
 podman kube play $PodYml | Out-Null
 if ($LASTEXITCODE -ne 0) { Fail "Could not start the pod. See the messages above." }
 
 # 5. Wait for the bridge, then open the probe page
-Write-Host "Waiting for data..."
+Write-Host "Waiting for data (up to 90 s)..."
 $ok = $false
-for ($i = 0; $i -lt 30 -and -not $ok; $i++) {
+for ($i = 0; $i -lt 45 -and -not $ok; $i++) {
     Start-Sleep -Seconds 2
-    try { $ok = (Invoke-WebRequest -UseBasicParsing "http://localhost:8765/stats" -TimeoutSec 2).Content -match "/mtx/odom" } catch {}
+    Write-Host "." -NoNewline
+    try { $ok = (Invoke-WebRequest -UseBasicParsing "http://127.0.0.1:8765/stats" -TimeoutSec 2).Content -match "/mtx/odom" } catch {}
 }
-if (-not $ok) { Fail "The pod started but no data arrived. Run: podman logs cavs-player" }
+Write-Host ""
+if (-not $ok) { Diagnose }
 
-Write-Host "`nRunning. Probe page: http://localhost:8765/   Websocket: ws://localhost:8765/" -ForegroundColor Green
+Write-Host "`nRunning. Dashboard: http://localhost:8765/dashboard/   Probe page: http://localhost:8765/   Websocket: ws://localhost:8765/" -ForegroundColor Green
 Write-Host "To stop: double-click stop-windows.bat"
-Start-Process "http://localhost:8765/"
+Start-Process "http://localhost:8765/dashboard/"

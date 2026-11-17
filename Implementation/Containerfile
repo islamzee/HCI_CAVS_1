@@ -18,6 +18,9 @@ COPY msgs/ src/
 RUN . /opt/ros/jazzy/setup.sh && colcon build --event-handlers console_direct- && rm -rf build log
 
 COPY bridge/ /bridge/
+# Dashboard + browser client (the pod mounts the repo's copy over /web so edits show without a rebuild)
+COPY dashboard/ /web/dashboard/
+COPY client/ /web/client/
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

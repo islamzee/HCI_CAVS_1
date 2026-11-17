@@ -8,7 +8,7 @@ ROS spins in a background thread and stores the latest messages; an asyncio loop
 each connected browser at the rates set in topics.py. Each client has its own camera choice and
 camera rate (C-011, C-013).
 """
-import asyncio, base64, io, json, os, threading, time
+import asyncio, base64, io, json, mimetypes, os, threading, time
 from collections import deque
 from http import HTTPStatus
 
@@ -27,6 +27,27 @@ TICK = 0.05                                     # s between send passes per clie
 ROSOUT_HISTORY = 200                            # /rosout lines sent to a browser when it connects
 LOOP_TOPIC = "/mtx/odom"                        # stamp going backwards on this topic = bag restarted
 HERE = os.path.dirname(os.path.abspath(__file__))
+WEB_ROOT = os.environ.get("WEB_ROOT", "/web")    # holds dashboard/ and client/ (repo's Implementation folder, mounted)
+WEB_DIRS = ("dashboard", "client")              # only these folders are served
+BAG_DIR = os.environ.get("BAG_DIR", "/bag")
+
+
+def bag_info():
+    """Name, start and duration of the bag being played, from its metadata.yaml (recorded values)."""
+    try:
+        import yaml
+        m = yaml.safe_load(open(os.path.join(BAG_DIR, "metadata.yaml")))["rosbag2_bagfile_information"]
+        files = m.get("relative_file_paths") or [""]
+        return {"name": os.path.splitext(os.path.basename(files[0]))[0],
+                "start_ns": m["starting_time"]["nanoseconds_since_epoch"],
+                "duration_ns": m["duration"]["nanoseconds"],
+                "message_count": m["message_count"], "ros_distro": m.get("ros_distro")}
+    except Exception as e:  # bag folder not mounted into the bridge
+        print("bag metadata not available:", e, flush=True)
+        return None
+
+
+BAG = bag_info()
 
 
 # ----------------------------------------------------------------------------- encoders
@@ -224,7 +245,7 @@ async def receiver(ws, cl: Client):
 
 async def handler(ws, path=None):
     cl = Client(); CLIENTS[ws] = cl; update_wanted_cams()
-    await ws.send(json.dumps({"type": "hello", "topics": {t: {"mode": s["mode"], "hz": s.get("hz")} for t, s in TOPICS.items()},
+    await ws.send(json.dumps({"type": "hello", "bag": BAG, "topics": {t: {"mode": s["mode"], "hz": s.get("hz")} for t, s in TOPICS.items()},
                               "cameras": CAMERAS, "camera": cl.camera, "camera_hz": cl.camera_hz, "camera_hz_range": CAMERA_HZ}))
     for j in cl.history:
         await ws.send(j)
@@ -238,14 +259,31 @@ async def handler(ws, path=None):
 
 
 def process_request(path, headers):
-    """Plain HTTP GET (no websocket upgrade) -> probe page or ROS receive counts."""
+    """Plain HTTP GET (no websocket upgrade) -> dashboard files, probe page or ROS receive counts."""
     if headers.get("Upgrade", "").lower() == "websocket":
         return None
     if path.startswith("/stats"):
         with STORE.lock: body = json.dumps({"received": STORE.counts, "clients": len(CLIENTS)}, indent=1).encode()
         return HTTPStatus.OK, [("Content-Type", "application/json")], body
+    rel = path.split("?")[0].lstrip("/")
+    if rel.split("/")[0] in WEB_DIRS:
+        return static_file(rel)
     body = open(os.path.join(HERE, "probe.html"), "rb").read()
     return HTTPStatus.OK, [("Content-Type", "text/html; charset=utf-8")], body
+
+
+def static_file(rel):
+    """Serve a file from WEB_ROOT/dashboard or WEB_ROOT/client (no caching, so edits show on reload)."""
+    if rel.endswith("/") or rel in WEB_DIRS:
+        rel = rel.rstrip("/") + "/index.html"
+    full = os.path.realpath(os.path.join(WEB_ROOT, rel))
+    allowed = [os.path.realpath(os.path.join(WEB_ROOT, d)) + os.sep for d in WEB_DIRS]
+    if not any(full.startswith(a) for a in allowed) or not os.path.isfile(full):
+        return HTTPStatus.NOT_FOUND, [("Content-Type", "text/plain")], b"not found"
+    ctype = mimetypes.guess_type(full)[0] or "application/octet-stream"
+    if ctype.startswith("text/") or ctype in ("application/javascript", "text/javascript"):
+        ctype += "; charset=utf-8"
+    return HTTPStatus.OK, [("Content-Type", ctype), ("Cache-Control", "no-store")], open(full, "rb").read()
 
 
 async def main():
