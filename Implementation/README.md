@@ -21,7 +21,7 @@ The team uses the slim copy in `Dataset/autonomy_demo_slim` (19 MB, in this repo
 
 1. **Install [Podman Desktop](https://podman-desktop.io)** and open it once. Accept its offer to set up WSL and a Podman machine (a restart may be needed).
 2. **Clone or pull this repo.** The bag comes with it: `Dataset\autonomy_demo_slim` (19 MB).
-3. **Double-click `Implementation\start-windows.bat`.** The first run downloads about 1 GB. Your browser then opens `http://localhost:8765/`, the probe page with live data.
+3. **Double-click `Implementation\start-windows.bat`.** The first run downloads about 1 GB. Your browser then opens the dashboard at `http://localhost:8765/dashboard/` with live data. (`http://localhost:8765/` is the probe page that lists every topic.)
 
 To stop, double-click `Implementation\stop-windows.bat`. To get updates, `git pull` and run `start-windows.bat` again.
 
@@ -38,7 +38,7 @@ If something goes wrong, the window says what to do. To see the player's own mes
 
 Only slim bags go in the repo (`Dataset/*_slim/`, made with `make_slim_bag.sh`). Full bags (18 GB) are over GitHub's 100 MB file limit and stay out (`.gitignore`).
 
-**Building a module?** Read [Frontend_Data_Guide_v1.md](Frontend_Data_Guide_v1.md): how to connect, which topics your module needs, and every field.
+**Building a module?** Start with [dashboard/README.md](dashboard/README.md): the shared app, which file is yours, and the page shape. The topics and fields are in [Frontend_Data_Guide_v1.md](Frontend_Data_Guide_v1.md).
 
 ## macOS setup
 ```
@@ -55,6 +55,7 @@ BAG_DIR=../Dataset/autonomy_demo_slim ./pod.sh up
 ```
 podman pull ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest
 podman volume create --opt type=none --opt o=bind --opt device=<bag folder as seen by the Podman machine> cavs-bag
+podman volume create --opt type=none --opt o=bind --opt device=<Implementation folder as seen by the Podman machine> cavs-web
 podman kube play Implementation/cavs-pod.yaml      # stop: podman kube down Implementation/cavs-pod.yaml
 ```
 On Windows, the Podman machine sees `C:\Users\...` as `/mnt/c/Users/...`. To use another bag: `start-windows.bat -Bag D:\path\to\bag`.
@@ -86,6 +87,7 @@ Check pages:
 | bridge/topics.py | The dashboard topics, send mode and rate, and the recorded fields kept for each. The player also takes its topic list from here |
 | bridge/bridge.py | ROS subscriber + websocket server |
 | bridge/probe.html | Test page served by the bridge |
+| dashboard/ | The shared dashboard app (Home built; other pages are placeholders for their owners). See dashboard/README.md |
 | start-windows.bat, stop-windows.bat, start-windows.ps1 | One-click start/stop on Windows (Podman machine, image, bag volume, pod, browser) |
 | Frontend_Data_Guide_v1.md | For module developers: connecting, topics per module, field reference |
 | client/cavs-client.js, client/example.html | Browser helper (connect, reconnect, per-topic callbacks, grid decoding) and a working example |
@@ -98,7 +100,7 @@ Check pages:
 ## Websocket protocol
 Server → browser, one JSON object per websocket message:
 ```
-{"type":"hello", "topics":{topic:{mode,hz}}, "cameras":[...], "camera":2, "camera_hz":2.0, "camera_hz_range":{...}}
+{"type":"hello", "bag":{name,start_ns,duration_ns,...}, "topics":{topic:{mode,hz}}, "cameras":[...], "camera":2, "camera_hz":2.0, "camera_hz_range":{...}}
 {"type":"msg", "topic":"/mtx/odom", "data":{"stamp":..., "x":..., "linear_x":..., ...}}
 {"type":"settings", "camera":0, "camera_hz":2.0}        (reply to a command)
 {"type":"history_end", "messages":205}                  (after the connect-time history: latest message of each event topic + last 200 /rosout lines)

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Zeenat Islam">
+<title>Autonomous Vehicle Testing · CAVS</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="screen">
+  <header class="hdr">
+    <img class="brand" src="img/cavs-banner.png" alt="Mississippi State University · Center for Advanced Vehicular Systems">
+    <div class="title">Autonomous Vehicle Testing
+      <small><span id="conn" class="conn">● CONNECTING</span> <span id="bagName"></span></small>
+    </div>
+    <div class="hs"><span>SAFETY FILTER</span><b id="hSafety" class="mute">—</b></div>
+    <div class="hs"><span>NAV2</span><b id="hNav2" class="mute">—</b></div>
+    <div class="hs"><span>DRIVE BRIDGE</span><b id="hBridge" class="mute">—</b></div>
+    <div class="hs"><span>E-STOP</span><b id="hEstop" class="mute">—</b></div>
+    <div class="clock"><span id="clock">--:--:--</span><small id="date"></small></div>
+  </header>
+
+  <main id="page" class="page"></main>
+
+  <nav class="bottom">
+    <a href="#/home"     data-page="home">⌂ Home</a>
+    <a href="#/map"      data-page="map">▱ Map</a>
+    <a href="#/sensors"  data-page="sensors">◎ Sensors</a>
+    <a href="#/logs"     data-page="logs">▤ Logs</a>
+    <a href="#/faults"   data-page="faults">⚠ Faults</a>
+    <a href="#/settings" data-page="settings">⚙ Settings</a>
+    <div id="alert" class="alert">◇ No Active Alerts</div>
+  </nav>
+</div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

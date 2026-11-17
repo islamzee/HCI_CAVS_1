@@ -33,6 +33,9 @@ The run loops: every 72 s the data jumps back to the start (see section 5).
 
 ## 2. Connect from your front end
 
+**Building a page of the shared dashboard?** Use [dashboard/README.md](dashboard/README.md) instead. The app already connects; your page receives `cavs` in `mount()`. The rest of this section is for code outside the dashboard.
+
+
 Use the helper [client/cavs-client.js](client/cavs-client.js). It's one file with no dependencies: copy it into your project.
 
 ```js
