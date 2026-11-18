@@ -4,7 +4,9 @@ Author: Zeenat Islam
 
 The recorded run `autonomy_demo_0` (ROS 2 Jazzy, 72 s) is replayed on a loop inside a Podman pod and
 streamed to the browser over a websocket. The browser dashboard connects to `ws://<host>:8765/`.
-The team uses the slim copy in `Dataset/autonomy_demo_slim` (19 MB, in this repo); the full 18 GB bag also works.
+Bags: **HCI-bag-v2** (16 Nov 2026, 85 s, real camera images; 22.6 GB, downloaded separately: see
+[Dataset/HCI-bag-v2/README.md](../Dataset/HCI-bag-v2/README.md)) and `Dataset/autonomy_demo_slim` (19 MB, in this repo,
+used until the new bag is downloaded).
 
 ```
  Podman pod "cavs"  (port 8765 published to the host)
@@ -20,7 +22,8 @@ The team uses the slim copy in `Dataset/autonomy_demo_slim` (19 MB, in this repo
 ## Windows setup
 
 1. **Install [Podman Desktop](https://podman-desktop.io)** and open it once. Accept its offer to set up WSL and a Podman machine (a restart may be needed).
-2. **Clone or pull this repo.** The bag comes with it: `Dataset\autonomy_demo_slim` (19 MB).
+2. **Clone or pull this repo**, then **download the new bag** into `Dataset\HCI-bag-v2` as described in
+   [its README](../Dataset/HCI-bag-v2/README.md). Without it, the small `autonomy_demo_slim` bag (in the repo) is used.
 3. **Double-click `Implementation\start-windows.bat`.** The first run downloads about 1 GB. Your browser then opens the dashboard at `http://localhost:8765/dashboard/` with live data. (`http://localhost:8765/` is the probe page that lists every topic.)
 
 To stop, double-click `Implementation\stop-windows.bat`. To get updates, `git pull` and run `start-windows.bat` again.
@@ -46,8 +49,8 @@ brew install podman
 podman machine init --cpus 6 --memory 8192 --disk-size 40
 podman machine start
 cd Implementation
-BAG_DIR=../Dataset/autonomy_demo_slim ./pod.sh build
-BAG_DIR=../Dataset/autonomy_demo_slim ./pod.sh up
+./pod.sh build
+./pod.sh up        # uses Dataset/HCI-bag-v2 if downloaded, else autonomy_demo_slim
 ```
 
 ## Details: manual commands (any OS)

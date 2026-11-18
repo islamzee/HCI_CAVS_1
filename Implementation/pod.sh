@@ -3,7 +3,32 @@
 # Usage: ./pod.sh build | up | down | restart | logs [player|bridge] | status | topics
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
-BAG_DIR="${BAG_DIR:-$HERE/../Dataset/autonomy_demo}"   # folder with metadata.yaml + .mcap
+# Bag folder (metadata.yaml + .mcap). Default: the new bag if it is downloaded, else the slim bag in the repo.
+# bag_files.txt in a bag folder lists each .mcap with its exact size; a wrong name or size stops here.
+check_bag() {   # prints a problem, or nothing if the folder is complete
+    local dir="$1" name size have other
+    [ -f "$dir/bag_files.txt" ] || return 0
+    while read -r name size _; do
+        case "$name" in ''|\#*) continue ;; esac
+        if [ -f "$dir/$name" ]; then
+            have=$(stat -f%z "$dir/$name" 2>/dev/null || stat -c%s "$dir/$name")
+            [ "$have" = "$size" ] || { echo "$name is $have bytes, expected $size: download incomplete or damaged"; return; }
+        else
+            other=$(ls "$dir" | grep -m1 '\.mcap' || true)
+            if [ -n "$other" ]; then echo "found '$other', expected '$name': rename it"; else echo missing; fi
+            return
+        fi
+    done < "$dir/bag_files.txt"
+}
+if [ -z "${BAG_DIR:-}" ]; then
+    problem=$(check_bag "$HERE/../Dataset/HCI-bag-v2")
+    case "$problem" in
+        "") BAG_DIR="$HERE/../Dataset/HCI-bag-v2" ;;
+        missing) BAG_DIR="$HERE/../Dataset/autonomy_demo_slim"
+                 echo "HCI-bag-v2 not downloaded (see Dataset/HCI-bag-v2/README.md); using autonomy_demo_slim" >&2 ;;
+        *) echo "Dataset/HCI-bag-v2: $problem" >&2; exit 1 ;;
+    esac
+fi
 PORT="${PORT:-8765}"
 RATE="${RATE:-1.0}"                                     # playback speed
 IMAGE=cavs-bag-bridge

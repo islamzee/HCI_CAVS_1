@@ -1,13 +1,14 @@
 # CAVS-1: start (or stop) the bag player + bridge on Windows.
 # Normally run by double-clicking start-windows.bat / stop-windows.bat.
 #   -Stop          stop the pod
-#   -Bag <folder>  bag folder (default: <repo>\Dataset\autonomy_demo_slim)
+#   -Bag <folder>  bag folder (default: <repo>\Dataset\HCI-bag-v2 if its .mcap is there, else autonomy_demo_slim)
 param([switch]$Stop, [string]$Bag)
 
 $Image  = "ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest"
 $PodYml = Join-Path $PSScriptRoot "cavs-pod.yaml"
 $Repo   = Split-Path -Parent $PSScriptRoot
-if (-not $Bag) { $Bag = Join-Path $Repo "Dataset\autonomy_demo_slim" }
+$NewBag  = Join-Path $Repo "Dataset\HCI-bag-v2"
+$SlimBag = Join-Path $Repo "Dataset\autonomy_demo_slim"
 
 function Fail($msg) { Write-Host "`n$msg" -ForegroundColor Red; exit 1 }
 function Step($msg) { Write-Host "`n== $msg" -ForegroundColor Cyan }
@@ -74,8 +75,42 @@ if ($Stop) { Write-Host "`nStopped." -ForegroundColor Green; exit 0 }
 
 # 2. Bag folder
 Step "Checking the bag folder"
+# bag_files.txt lists each .mcap with its exact size: catches wrong names and unfinished downloads.
+function CheckBag($dir) {
+    $list = Join-Path $dir "bag_files.txt"
+    if (-not (Test-Path $list)) { return "ok" }
+    foreach ($line in Get-Content $list) {
+        if ($line -match '^\s*#' -or -not $line.Trim()) { continue }
+        $name, $size = ($line -split '\s+')[0, 1]
+        $f = Join-Path $dir $name
+        if (Test-Path $f) {
+            $have = (Get-Item $f).Length
+            if ($have -ne [int64]$size) {
+                return "$name is $([math]::Round($have / 1GB, 2)) GB but should be $([math]::Round([int64]$size / 1GB, 2)) GB. The download is incomplete or damaged: download it again."
+            }
+            continue
+        }
+        $other = Get-ChildItem $dir -Filter "*.mcap*" -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($other) { return "Found '$($other.Name)' but expected '$name'. Rename it to $name (exactly), then run this again." }
+        return "missing"
+    }
+    return "ok"
+}
+if (-not $Bag) {
+    $state = CheckBag $NewBag
+    if ($state -eq "ok") { $Bag = $NewBag }
+    elseif ($state -eq "missing") {
+        Write-Host "The new bag (HCI-bag-v2) is not downloaded yet, so using the small autonomy_demo_slim bag." -ForegroundColor Yellow
+        Write-Host "To get it, see Dataset\HCI-bag-v2\README.md"
+        $Bag = $SlimBag
+    }
+    else { Fail "Problem with the new bag in $NewBag`n$state" }
+} else {
+    $state = CheckBag $Bag
+    if ($state -ne "ok") { Fail "Problem with the bag in $Bag`n$(if ($state -eq 'missing') { 'The .mcap file is missing.' } else { $state })" }
+}
 if (-not (Test-Path (Join-Path $Bag "metadata.yaml"))) {
-    Fail "No bag found in:`n  $Bag`nRun 'git pull' in the repo folder to get Dataset\autonomy_demo_slim (it must contain metadata.yaml and the .mcap file)."
+    Fail "No bag found in:`n  $Bag`nRun 'git pull' in the repo folder (the folder must contain metadata.yaml and the .mcap file)."
 }
 function VmPath($p) { $f = (Resolve-Path $p).Path; "/mnt/" + $f.Substring(0, 1).ToLower() + ($f.Substring(2) -replace '\\', '/') }   # C:\x\y -> /mnt/c/x/y
 $vmPath = VmPath $Bag

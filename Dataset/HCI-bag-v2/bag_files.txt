@@ -1,0 +1,2 @@
+# file  bytes  sha256   (checked by the start scripts: name and exact size)
+hopefully_fixed_0.mcap 22628706760 852f405eeacb1e2d639f98d85d260a1923569d139e06220598d11fb1b5656fa7
