@@ -3,14 +3,31 @@
 //
 //   import { cavs, state } from "../state.js";
 //
-// The websocket address is ws://localhost:8765/ unless the page URL says otherwise:
-//   http://localhost:8765/dashboard/?ws=ws://192.168.1.20:8765/     (a teammate's pod)
+// Websocket address:
+//   - ?ws=... in the page URL always wins: http://localhost:8765/dashboard/?ws=ws://192.168.1.20:8765/
+//   - page served by the bridge, directly (http://host:8765/dashboard/) or through a web server in front of it
+//     (https://server/<prefix>/dashboard/): connect back to the same place, wss:// under https.
+//     Checked by asking the page's own server for <prefix>/stats, which only the bridge answers.
+//   - otherwise (VS Code Live Server, opened as a file): ws://localhost:8765/
 
 import { CavsClient } from "../../client/cavs-client.js";
 import { ROSOUT_LEVEL, rosoutTone, COLLISION_ACTION } from "./lib/format.js";
 
 const params = new URLSearchParams(location.search);
-const wsUrl = params.get("ws") || (location.port === "8765" ? `ws://${location.host}/` : "ws://localhost:8765/");
+
+async function defaultWsUrl() {
+  if (location.protocol === "http:" || location.protocol === "https:") {
+    const prefix = location.pathname.split("/dashboard/")[0];
+    try {
+      const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 1500);
+      const r = await fetch(`${prefix}/stats`, { cache: "no-store", signal: ctl.signal });
+      clearTimeout(t);
+      if (r.ok && "received" in (await r.json())) return `${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}${prefix}/`;
+    } catch { /* not the bridge */ }
+  }
+  return "ws://localhost:8765/";
+}
+const wsUrl = params.get("ws") || (await defaultWsUrl());
 
 export const cavs = new CavsClient(wsUrl);
 

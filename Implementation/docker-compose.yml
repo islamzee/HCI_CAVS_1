@@ -1,0 +1,39 @@
+# CAVS-1 bag player + websocket bridge for a Linux server with Docker (same setup as cavs-pod.yaml).
+# Author: Zeenat Islam
+#
+#   cd Implementation
+#   docker compose up -d          start (and again after every reboot, because of "restart")
+#   docker compose down           stop
+#   docker compose logs -f player
+#
+# Settings (environment or an .env file next to this file):
+#   BAG_DIR  bag folder with metadata.yaml + .mcap   (default ../Dataset/HCI-bag-v2)
+#   PORT     port on the server                       (default 8765)
+#   RATE     playback speed                           (default 1.0)
+# The ",z" on the mounts lets the containers read the folders on SELinux systems; elsewhere it is ignored.
+# For Docker only. With Podman use ./pod.sh up instead: podman-compose ignores ipc: "service:bridge", and without a
+# shared IPC namespace the player and bridge don't find each other (tested 19 Nov 2026: 0 topics vs 20 with it).
+
+services:
+  bridge:
+    image: ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest
+    command: ["python3", "/bridge/bridge.py"]
+    ipc: shareable                        # the player joins it (see below)
+    ports:
+      - "${PORT:-8765}:8765"
+    volumes:
+      - "${BAG_DIR:-../Dataset/HCI-bag-v2}:/bag:ro,z"
+      - ".:/web:ro,z"                     # dashboard/ and client/, served at /dashboard/
+    restart: unless-stopped
+
+  player:
+    image: ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest
+    network_mode: "service:bridge"        # share the bridge's network and IPC, like the two containers of the Podman pod;
+    ipc: "service:bridge"                 # ROS 2 (Fast DDS) needs both to find the bridge
+    depends_on: [bridge]
+    environment:
+      RATE: "${RATE:-1.0}"
+    command: ["bash", "-c", "sleep 3; exec ros2 bag play /bag --loop --rate $${RATE} --topics $$(python3 /bridge/topics.py)"]
+    volumes:
+      - "${BAG_DIR:-../Dataset/HCI-bag-v2}:/bag:ro,z"
+    restart: unless-stopped

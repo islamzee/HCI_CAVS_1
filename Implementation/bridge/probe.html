@@ -32,7 +32,7 @@
   <table><thead><tr><th>topic</th><th>n</th><th>latest data</th></tr></thead><tbody id="tb"></tbody></table>
 </div>
 <script>
-const ws = new WebSocket(`ws://${location.host}/`);
+const ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}${location.pathname.replace(/[^/]*$/, "")}`);
 const rows = {}, counts = {};
 let bytes = 0, camTopic = "";
 const $ = id => document.getElementById(id);

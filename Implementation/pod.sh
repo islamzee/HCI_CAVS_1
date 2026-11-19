@@ -31,7 +31,7 @@ if [ -z "${BAG_DIR:-}" ]; then
 fi
 PORT="${PORT:-8765}"
 RATE="${RATE:-1.0}"                                     # playback speed
-IMAGE=cavs-bag-bridge
+IMAGE="${IMAGE:-cavs-bag-bridge}"                       # or IMAGE=ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest (no build needed)
 POD=cavs
 
 case "${1:-}" in
@@ -39,11 +39,16 @@ case "${1:-}" in
     podman build -t "$IMAGE" -f "$HERE/Containerfile" "$HERE" ;;
   up)
     BAG_DIR="$(cd "$BAG_DIR" && pwd)"
+    # Linux with SELinux enforcing (RHEL, Rocky, Fedora): label the mounts so the containers may read them
+    MNT=ro
+    if [ "$(uname)" = Linux ] && command -v selinuxenabled >/dev/null && selinuxenabled; then MNT=ro,z; fi
     podman pod create --name "$POD" -p "$PORT:8765"
-    # bridge first, so it is subscribed before the player starts publishing
-    podman run -d --pod "$POD" --name cavs-bridge -v "$HERE:/web:ro" -v "$BAG_DIR:/bag:ro" "$IMAGE" python3 /bridge/bridge.py
-    podman run -d --pod "$POD" --name cavs-player -v "$BAG_DIR:/bag:ro" "$IMAGE" \
+    # bridge first, so it is subscribed before the player starts publishing.
+    # --restart=always: on a server, "podman-restart.service" starts them again after a reboot (Server_Setup_v1.md)
+    podman run -d --restart=always --pod "$POD" --name cavs-bridge -v "$HERE:/web:$MNT" -v "$BAG_DIR:/bag:$MNT" "$IMAGE" python3 /bridge/bridge.py
+    podman run -d --restart=always --pod "$POD" --name cavs-player -v "$BAG_DIR:/bag:$MNT" "$IMAGE" \
       bash -c "sleep 3; exec ros2 bag play /bag --loop --rate $RATE --topics \$(python3 /bridge/topics.py)"
+    echo "Bag: $BAG_DIR"
     echo "Dashboard: http://localhost:$PORT/dashboard/   Probe page: http://localhost:$PORT/   websocket: ws://localhost:$PORT/   receive counts: http://localhost:$PORT/stats" ;;
   down)
     podman pod rm -f "$POD" ;;

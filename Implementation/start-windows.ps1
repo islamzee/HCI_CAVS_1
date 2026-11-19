@@ -34,7 +34,7 @@ function Diagnose {
         $hint = "The pod cannot see the bag folder.`n" +
                 "  - Under '== podman machine' above, VM TYPE must be 'wsl'. If it says 'hyperv', delete that machine in Podman Desktop and create a new one with WSL.`n" +
                 "  - If the repo is inside OneDrive (path has 'OneDrive' in it), clone it somewhere else, e.g. C:\HCI_CAVS_1, and run this again.`n" +
-                "  - Check that Dataset\autonomy_demo_slim has the .mcap file (about 19 MB). If it is missing, run 'git pull'."
+                "  - Check that $Bag has the .mcap file. For autonomy_demo_slim run 'git pull'; for HCI-bag-v2 see Dataset\HCI-bag-v2\README.md."
     } elseif ($inside -match "/mtx/odom") {
         $hint = "Data is flowing inside the pod, but Windows cannot reach port 8765.`n" +
                 "  - Try http://127.0.0.1:8765/ in the browser.`n" +

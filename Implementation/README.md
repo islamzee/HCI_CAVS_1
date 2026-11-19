@@ -43,6 +43,8 @@ Only slim bags go in the repo (`Dataset/*_slim/`, made with `make_slim_bag.sh`).
 
 **Building a module?** Start with [dashboard/README.md](dashboard/README.md): the shared app, which file is yours, and the page shape. The topics and fields are in [Frontend_Data_Guide_v1.md](Frontend_Data_Guide_v1.md).
 
+**Linux server:** see [Server_Setup_v1.md](Server_Setup_v1.md).
+
 ## macOS setup
 ```
 brew install podman
@@ -95,6 +97,8 @@ Check pages:
 | Frontend_Data_Guide_v1.md | For module developers: connecting, topics per module, field reference |
 | client/cavs-client.js, client/example.html | Browser helper (connect, reconnect, per-topic callbacks, grid decoding) and a working example |
 | cavs-pod.yaml | Pod definition for `podman kube play` (Windows and macOS) |
+| docker-compose.yml | The same two containers for a Linux server with Docker |
+| Server_Setup_v1.md | Running it on a Linux server (Podman or Docker, restart after reboot, firewall, HTTPS proxy) |
 | pod.sh | build / up / down / logs / status / topics (macOS/Linux) |
 | make_slim_bag.sh | Small copy of a bag: dashboard topics only, zstd-compressed (autonomy_demo: 18 GB → 19 MB, same message counts; the saturated camera frames compress to almost nothing) |
 | ../.github/workflows/container.yml | Builds and publishes the image to ghcr.io |
