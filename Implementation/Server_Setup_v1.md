@@ -5,6 +5,10 @@ Author: Zeenat Islam · 19 Nov 2026
 The same pod the team runs on laptops: a bag player and the websocket bridge. The bridge also serves the dashboard.
 Everyone opens one address; they all see the same playback, and each viewer picks their own camera.
 
+> **Not for the CAVS server.** It runs only on the MTX's local network with no outside connections
+> (Dr Hudson, 19 Nov 2026), so the team could not reach it. Use this guide for another Linux machine on the
+> campus network, such as a lab PC or a department VM. Until then, everyone runs the pod on their own laptop.
+
 ## What the server needs
 - Linux on x86-64 or ARM64, with **Podman 4+** or **Docker with Compose v2**, and git
 - About 30 GB free disk (the bag is 22.6 GB) and 4 CPU cores
