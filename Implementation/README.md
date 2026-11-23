@@ -78,6 +78,8 @@ From this folder:
 ./pod.sh down
 ```
 Options: `RATE=0.5 ./pod.sh up` (playback speed), `PORT=9000 ./pod.sh up`, `BAG_DIR=/path/to/bag ./pod.sh up`
+
+To keep a machine on its own bag (e.g. the MTX), copy `pod.env.example` to `pod.env` and set `BAG_DIR` and `IMAGE` there once. Every `./pod.sh` command then uses them; `pod.env` is not committed. Steps for the MTX (offline): [MTX_Setup/MTX_Setup_v1.md](MTX_Setup/MTX_Setup_v1.md), or the same with diagrams: [MTX_Setup/MTX_Setup_v1.html](MTX_Setup/MTX_Setup_v1.html) (open in a browser).
 (folder holding `metadata.yaml` and the `.mcap`, for the second bag).
 
 Check pages:

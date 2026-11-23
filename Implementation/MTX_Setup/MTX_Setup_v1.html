@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAVS-1 on the MTX</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a field guide. Each step is tagged with WHERE it happens; the four places have their own colour,
+   used the same way in the two diagrams, the step chips and the step rails. */
+:root {
+  --bg: #f5f7f8; --fg: #1b2228; --muted: #5a6672; --line: #d6dde3; --card: #ffffff; --code: #eaeef2;
+  --laptop: #1f6fb2; --laptop-soft: #e3eef8;
+  --usb: #b26b00;    --usb-soft: #fbefd9;
+  --mtx: #1d7a4c;    --mtx-soft: #dff1e7;
+  --view: #6b4bb8;   --view-soft: #ece6f8;
+  --bad: #b3261e;    --bad-soft: #fbe4e2;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12171b; --fg: #e2e7eb; --muted: #9aa6b1; --line: #2a333b; --card: #1a2127; --code: #222b33;
+  --laptop: #6db3ec; --laptop-soft: #17293a; --usb: #f0b54e; --usb-soft: #33280f;
+  --mtx: #5ccf93; --mtx-soft: #12301f; --view: #b49af0; --view-soft: #261f3a;
+  --bad: #f2867d; --bad-soft: #3a1b19; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12171b; --fg: #e2e7eb; --muted: #9aa6b1; --line: #2a333b; --card: #1a2127; --code: #222b33;
+  --laptop: #6db3ec; --laptop-soft: #17293a; --usb: #f0b54e; --usb-soft: #33280f;
+  --mtx: #5ccf93; --mtx-soft: #12301f; --view: #b49af0; --view-soft: #261f3a;
+  --bad: #f2867d; --bad-soft: #3a1b19; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 32px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 36px; }
+h1 { font-size: 30px; line-height: 1.2; margin: 0; font-weight: 700; text-wrap: balance; }
+h2 { font-size: 20px; margin: 0; font-weight: 600; text-wrap: balance; }
+h3 { font-size: 16px; margin: 0; font-weight: 600; }
+p { margin: 0; }
+.lead { color: var(--muted); max-width: 64ch; }
+.eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+section { display: flex; flex-direction: column; gap: 14px; }
+code { font-family: var(--mono); font-size: 13.5px; background: var(--code); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+
+/* place colours */
+.laptop { --c: var(--laptop); --s: var(--laptop-soft); }
+.usb    { --c: var(--usb);    --s: var(--usb-soft); }
+.mtx    { --c: var(--mtx);    --s: var(--mtx-soft); }
+.view   { --c: var(--view);   --s: var(--view-soft); }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--c); background: var(--s); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
+
+/* diagram 1: the journey */
+.journey { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; align-items: stretch; gap: 8px; }
+.node { background: var(--s); border: 1.5px solid var(--c); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.node .icon { width: 30px; height: 30px; color: var(--c); }
+.node h3 { color: var(--c); }
+.node ul { margin: 0; padding-left: 16px; font-size: 13.5px; display: flex; flex-direction: column; gap: 2px; }
+.arrow { display: grid; place-items: center; color: var(--muted); }
+.arrow svg { width: 26px; height: 26px; }
+.legend-note { font-size: 13px; color: var(--muted); }
+@media (max-width: 760px) {
+  .journey { grid-template-columns: 1fr; }
+  .arrow svg { transform: rotate(90deg); }
+}
+
+/* diagram 2: inside the MTX */
+.figure { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; overflow-x: auto; }
+.figure svg { display: block; width: 100%; min-width: 640px; height: auto; }
+.figure text { font-family: var(--sans); fill: var(--fg); }
+.figure .small { font-size: 12px; fill: var(--muted); }
+.figure .mono { font-family: var(--mono); font-size: 12.5px; }
+
+/* steps */
+.steps { display: flex; flex-direction: column; gap: 18px; }
+.step { display: grid; grid-template-columns: 44px 1fr; gap: 14px; }
+.step .num { width: 40px; height: 40px; border-radius: 50%; background: var(--c); color: var(--bg); font-weight: 700;
+  font-size: 17px; display: grid; place-items: center; }
+.step .body { min-width: 0; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--c);
+  border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.step .head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.step ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+
+.cmd { position: relative; background: var(--code); border-radius: 6px; }
+.cmd pre { margin: 0; padding: 10px 76px 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.5; }
+.cmd .c { color: var(--muted); }
+.copy { position: absolute; top: 6px; right: 6px; font: 600 12px var(--sans); color: var(--fg); background: var(--card);
+  border: 1px solid var(--line); border-radius: 5px; padding: 4px 9px; cursor: pointer; }
+.copy:hover { border-color: var(--muted); }
+.copy:focus-visible { outline: 2px solid var(--laptop); outline-offset: 2px; }
+
+.note { border-radius: 6px; padding: 10px 12px; font-size: 14px; display: flex; gap: 10px; align-items: flex-start; }
+.note svg { flex: none; width: 18px; height: 18px; margin-top: 2px; }
+.ok   { background: var(--mtx-soft); color: var(--fg); } .ok svg { color: var(--mtx); }
+.warn { background: var(--usb-soft); color: var(--fg); } .warn svg { color: var(--usb); }
+.stop { background: var(--bad-soft); color: var(--fg); } .stop svg { color: var(--bad); }
+
+/* troubleshooting */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { width: 42%; }
+.sev { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--bad); margin-right: 8px; vertical-align: 1px; }
+.sev.mild { background: var(--usb); }
+footer { color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: no-preference) { .copy { transition: border-color .15s; } }
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <span class="eyebrow">CAVS-1 dashboard · field guide</span>
+    <h1>Running the dashboard on the MTX</h1>
+    <p class="lead">The MTX computer has no internet, so everything travels on a USB drive. On the MTX, the dashboard replays a bag that is already stored there. The code stays the same; one settings file, <code>pod.env</code>, tells it which bag to play.</p>
+  </header>
+
+  <!-- Diagram 1 -->
+  <section>
+    <h2>The journey</h2>
+    <div class="journey" role="img" aria-label="Laptop with internet, then USB drive, then the MTX computer, then a browser on the MTX network">
+      <div class="node laptop">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg>
+        <h3>Your laptop</h3>
+        <ul><li>Has internet</li><li>Downloads the image</li><li>Saves it to a file</li></ul>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="node usb">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="9" width="10" height="13" rx="1.5"/><path d="M9 9V3h6v6M11 5.5h0M13 5.5h0"/></svg>
+        <h3>USB drive</h3>
+        <ul><li><code>cavs-image-amd64.tar</code> or <code>-arm64</code></li><li><code>Implementation</code> folder</li></ul>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="node mtx">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15l2-6h14l2 6v3H3z"/><circle cx="7.5" cy="18" r="1.8"/><circle cx="16.5" cy="18" r="1.8"/><path d="M12 9V5M9.5 5h5"/></svg>
+        <h3>MTX computer</h3>
+        <ul><li>No internet</li><li>Already has the bag</li><li>Runs the pod</li></ul>
+      </div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+      <div class="node view">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M3 8h18M8 21h8M12 17v4"/></svg>
+        <h3>Browser</h3>
+        <ul><li>On the MTX, or a device on its network</li><li>Port 8765</li></ul>
+      </div>
+    </div>
+    <p class="legend-note">Each step below carries the colour of the place where you do it.</p>
+  </section>
+
+  <!-- Diagram 2 -->
+  <section>
+    <h2>What runs on the MTX</h2>
+    <div class="figure">
+      <svg viewBox="0 0 760 270" role="img" aria-label="pod.env points pod.sh at the bag folder; the player reads the bag and passes it to the bridge, which serves the dashboard on port 8765">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker>
+        </defs>
+        <!-- MTX boundary -->
+        <rect x="8" y="8" width="560" height="254" rx="12" style="fill:var(--mtx-soft);stroke:var(--mtx)" stroke-width="1.5" stroke-dasharray="6 5"/>
+        <text x="24" y="32" style="fill:var(--mtx)" font-weight="700" font-size="13" letter-spacing="1">MTX COMPUTER</text>
+
+        <!-- pod.env -->
+        <rect x="24" y="48" width="170" height="64" rx="8" style="fill:var(--card);stroke:var(--usb)" stroke-width="1.5"/>
+        <text x="38" y="72" class="mono" font-weight="500">pod.env</text>
+        <text x="38" y="92" class="small">BAG_DIR = the bag folder</text>
+        <text x="38" y="106" class="small">IMAGE = loaded image</text>
+
+        <!-- bag folder -->
+        <rect x="24" y="150" width="170" height="88" rx="8" style="fill:var(--card);stroke:var(--line)" stroke-width="1.5"/>
+        <text x="38" y="174" font-weight="600" font-size="14">Their bag folder</text>
+        <text x="38" y="196" class="small mono">metadata.yaml</text>
+        <text x="38" y="214" class="small mono">*.mcap</text>
+        <path d="M109 112 V146" style="stroke:var(--usb)" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+        <text x="118" y="134" class="small">points to</text>
+
+        <!-- pod -->
+        <rect x="236" y="48" width="316" height="190" rx="10" style="fill:var(--card);stroke:var(--mtx)" stroke-width="1.5"/>
+        <text x="252" y="72" font-weight="700" font-size="13" style="fill:var(--mtx)">POD  (./pod.sh up)</text>
+        <rect x="256" y="96" width="120" height="70" rx="8" style="fill:var(--mtx-soft);stroke:var(--mtx)" stroke-width="1.2"/>
+        <text x="272" y="124" font-weight="600" font-size="14">Player</text>
+        <text x="272" y="144" class="small">replays the bag</text>
+        <rect x="414" y="96" width="120" height="70" rx="8" style="fill:var(--mtx-soft);stroke:var(--mtx)" stroke-width="1.2"/>
+        <text x="430" y="124" font-weight="600" font-size="14">Bridge</text>
+        <text x="430" y="144" class="small">serves dashboard</text>
+        <path d="M376 131 H410" style="stroke:var(--muted)" stroke-width="1.8" marker-end="url(#ah)"/>
+        <text x="256" y="196" class="small">reads the bag only, sends nothing</text>
+        <text x="256" y="214" class="small">to the vehicle</text>
+        <path d="M194 194 H230 V150 H252" fill="none" style="stroke:var(--muted)" stroke-width="1.8" marker-end="url(#ah)"/>
+
+        <!-- port + viewer -->
+        <rect x="532" y="118" width="40" height="26" rx="5" style="fill:var(--view);stroke:var(--view)"/>
+        <text x="552" y="136" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--bg)">8765</text>
+        <path d="M572 131 H606" style="stroke:var(--muted)" stroke-width="1.8" marker-end="url(#ah)"/>
+        <rect x="610" y="88" width="140" height="86" rx="8" style="fill:var(--view-soft);stroke:var(--view)" stroke-width="1.5"/>
+        <text x="624" y="112" font-weight="600" font-size="14" style="fill:var(--view)">Browser</text>
+        <text x="624" y="134" class="small mono">localhost:8765</text>
+        <text x="624" y="150" class="small">or &lt;MTX address&gt;</text>
+        <text x="624" y="164" class="small mono">/dashboard/</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Steps -->
+  <section>
+    <h2>Steps</h2>
+    <div class="steps">
+
+      <div class="step mtx"><div class="num">1</div><div class="body">
+        <div class="head"><h3>Check the MTX before you go</h3><span class="chip mtx">MTX</span></div>
+        <p>Ask whoever has access to run these two commands on the MTX:</p>
+        <div class="cmd"><pre>podman --version   <span class="c"># needs 4 or newer</span>
+uname -m           <span class="c"># x86_64 = Intel/AMD, aarch64 = ARM</span></pre><button class="copy" type="button">Copy</button></div>
+        <div class="note warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h0"/></svg><span>Write down the <code>uname -m</code> answer. Step 2 depends on it.</span></div>
+      </div></div>
+
+      <div class="step laptop"><div class="num">2</div><div class="body">
+        <div class="head"><h3>Save the image to a file</h3><span class="chip laptop">Laptop · internet</span></div>
+        <div class="cmd"><pre>podman pull --platform linux/amd64 ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest
+podman save -o cavs-image-amd64.tar ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest</pre><button class="copy" type="button">Copy</button></div>
+        <ul>
+          <li>MTX said <code>x86_64</code>: keep <code>linux/amd64</code>.</li>
+          <li>MTX said <code>aarch64</code>: use <code>linux/arm64</code>.</li>
+        </ul>
+        <div class="note warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h0"/></svg><span>Don't skip <code>--platform</code>. A Mac is ARM and would otherwise save the wrong one.</span></div>
+      </div></div>
+
+      <div class="step usb"><div class="num">3</div><div class="body">
+        <div class="head"><h3>Copy two things to the USB drive</h3><span class="chip usb">USB drive</span></div>
+        <ul>
+          <li><code>cavs-image-amd64.tar</code> (Intel/AMD) or <code>cavs-image-arm64.tar</code> (ARM), about 1 GB each. Ready-made copies of both are in <code>MTX_transfer/</code> at the top of the repo on Zeenat's laptop (made 20 Nov 2026, not in git).</li>
+          <li>The repo's <code>Implementation</code> folder. Run <code>git pull</code> first. You don't need <code>Dataset</code>: the bag is already on the MTX.</li>
+        </ul>
+      </div></div>
+
+      <div class="step mtx"><div class="num">4</div><div class="body">
+        <div class="head"><h3>Load and set up (once)</h3><span class="chip mtx">MTX</span></div>
+        <div class="cmd"><pre>cp -r /media/&lt;usb&gt;/Implementation ~/cavs
+podman load -i /media/&lt;usb&gt;/cavs-image-amd64.tar   <span class="c"># or cavs-image-arm64.tar on an ARM MTX</span>
+cd ~/cavs
+cp pod.env.example pod.env
+nano pod.env</pre><button class="copy" type="button">Copy</button></div>
+        <p>In <code>pod.env</code>, set the bag folder. Save with <b>Ctrl+O</b>, Enter, then exit with <b>Ctrl+X</b>.</p>
+        <div class="cmd"><pre>BAG_DIR=/full/path/to/their/bag
+IMAGE=ghcr.io/islamzee/hci_cavs_1/cavs-bag-bridge:latest</pre><button class="copy" type="button">Copy</button></div>
+        <ul>
+          <li><code>BAG_DIR</code> is the folder that holds <code>metadata.yaml</code> and the <code>.mcap</code> file.</li>
+          <li>Full path, no spaces around <code>=</code>, no quotes.</li>
+          <li>Don't know where the bag is? <code>find / -name metadata.yaml 2&gt;/dev/null</code></li>
+        </ul>
+      </div></div>
+
+      <div class="step mtx"><div class="num">5</div><div class="body">
+        <div class="head"><h3>Start it</h3><span class="chip mtx">MTX</span></div>
+        <div class="cmd"><pre>./pod.sh up
+./pod.sh topics      <span class="c"># after about 10 seconds</span></pre><button class="copy" type="button">Copy</button></div>
+        <div class="note ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg><span>Good: it prints <code>Bag: /full/path/to/their/bag</code>, and <code>topics</code> lists <code>/mtx/odom</code> with a rate.</span></div>
+        <div class="note stop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg><span>It says <code>autonomy_demo_slim</code>? Then <code>pod.env</code> wasn't read. Check the file name and that it's next to <code>pod.sh</code>.</span></div>
+      </div></div>
+
+      <div class="step view"><div class="num">6</div><div class="body">
+        <div class="head"><h3>Open the dashboard</h3><span class="chip view">Browser</span></div>
+        <ul>
+          <li>On the MTX itself: <code>http://localhost:8765/dashboard/</code></li>
+          <li>From a laptop or tablet on the MTX network: run <code>hostname -I</code> on the MTX, then open <code>http://&lt;that address&gt;:8765/dashboard/</code></li>
+        </ul>
+        <div class="note warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h0"/></svg><span>Localhost works but the other device doesn't? The MTX firewall blocks port 8765. Ask whoever manages the MTX.</span></div>
+      </div></div>
+
+      <div class="step mtx"><div class="num">7</div><div class="body">
+        <div class="head"><h3>Stop it when you're done</h3><span class="chip mtx">MTX</span></div>
+        <div class="cmd"><pre>./pod.sh down</pre><button class="copy" type="button">Copy</button></div>
+        <p>Always stop it. It keeps reading the bag, and the MTX is the vehicle's computer.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- Troubleshooting -->
+  <section>
+    <h2>If something goes wrong</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>What you see</th><th>What to do</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sev"></span>Dashboard waits for data</td><td><code>./pod.sh logs player</code> and <code>./pod.sh logs bridge</code> show why</td></tr>
+        <tr><td><span class="sev"></span><code>./pod.sh logs bridge</code> says "exec format error"</td><td>Wrong processor type. Redo step 2 with the other <code>--platform</code></td></tr>
+        <tr><td><span class="sev mild"></span>Pod already exists</td><td><code>./pod.sh down</code>, then <code>./pod.sh up</code></td></tr>
+        <tr><td><span class="sev mild"></span>Some panels empty, others fine</td><td>That bag doesn't have those topics. Nothing to fix in the setup</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Other commands</h2>
+    <div class="cmd"><pre>BAG_DIR=/other/bag ./pod.sh up   <span class="c"># another bag, this run only</span>
+RATE=0.5 ./pod.sh up             <span class="c"># slower playback</span>
+./pod.sh restart                 <span class="c"># stop and start again</span>
+./pod.sh status                  <span class="c"># is it running?</span></pre><button class="copy" type="button">Copy</button></div>
+  </section>
+
+  <footer>Zeenat Islam · 20 Nov 2026 · Same steps as <code>MTX_Setup_v1.md</code> in this folder. Not yet tried on the MTX.</footer>
+</div>
+
+<script>
+document.querySelectorAll(".copy").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const pre = btn.parentElement.querySelector("pre");
+    const text = pre.innerText.split("\n").map((l) => l.replace(/\s+#.*$/, "")).join("\n").trim();
+    const done = () => { btn.textContent = "Copied"; setTimeout(() => (btn.textContent = "Copy"), 1500); };
+    const select = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Selected"; setTimeout(() => (btn.textContent = "Copy"), 1500); };
+    try { navigator.clipboard.writeText(text).then(done, select); } catch { select(); }
+  });
+});
+</script>
+</body>
+</html>

@@ -3,6 +3,13 @@
 # Usage: ./pod.sh build | up | down | restart | logs [player|bridge] | status | topics
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
+# Optional pod.env next to this script (copy pod.env.example): fixed BAG_DIR / IMAGE / PORT / RATE for this machine,
+# e.g. on the MTX. A value given on the command line (BAG_DIR=... ./pod.sh up) still wins.
+if [ -f "$HERE/pod.env" ]; then
+    while IFS='=' read -r key value; do
+        case "$key" in BAG_DIR|IMAGE|PORT|RATE) [ -n "${!key:-}" ] || printf -v "$key" '%s' "$value" ;; esac
+    done < <(grep -E '^(BAG_DIR|IMAGE|PORT|RATE)=' "$HERE/pod.env")
+fi
 # Bag folder (metadata.yaml + .mcap). Default: the new bag if it is downloaded, else the slim bag in the repo.
 # bag_files.txt in a bag folder lists each .mcap with its exact size; a wrong name or size stops here.
 check_bag() {   # prints a problem, or nothing if the folder is complete
