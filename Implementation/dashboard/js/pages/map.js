@@ -8,10 +8,12 @@ import {
 } from "../lib/format.js";
 import { cavs, state, onEvents, clearEvents } from "../state.js";
 import {
-  COLORS, gridCanvas, fitView, bounds, fitCanvas, polyline, scaleBar, redrawer,
+  COLORS, gridCanvas, fitView, bounds, fitCanvas, polyline, scaleBar, redrawer, distanceRings,
 } from "../lib/draw.js";
 
 const MIN_SPAN_M = 30;
+const RING_STEP_M = 10;      // distance rings around the vehicle (same as Home)
+const RING_MIN_PX = 14;      // closer than this on screen: rings every 5 × RING_STEP_M instead
 const VEHICLE_MARKER_PX = [24, 15];
 const VEHICLE_COLOR = COLORS.acc;
 const MAX_FAULTS = 500;
@@ -566,6 +568,7 @@ const TEMPLATE = `
       <span><i></i>driven</span>
       <span><i class="dash"></i>planned</span>
       <span><i class="sq"></i>costmap obstacle</span>
+      <span><i class="ring"></i>distance from vehicle</span>
       <span><i style="background:rgba(212,145,0,.22);border:1.5px solid ${COLORS.warn};height:10px;width:12px;"></i>slowdown</span>
       <span><i style="background:rgba(214,69,69,.24);border:1.5px solid ${COLORS.bad};height:10px;width:12px;"></i>stop zone</span>
       <span><i style="background:rgba(47, 111, 219, 0.12);border:1.5px solid ${COLORS.ink};height:10px;width:12px;"></i>footprint</span>
@@ -878,6 +881,10 @@ export default {
       if (layers.global) drawGridLayer(ctx, v, globalGrid, 1.0);
       if (layers.local) drawGridLayer(ctx, v, localGrid, layers.global && globalGrid ? 0.65 : 1.0);
 
+      // 1b. Distance rings around the vehicle (same as Home), under the paths, zones and pins
+      const pose = vehiclePose(fp, odom);
+      if (pose) distanceRings(ctx, v, v.x(pose.cx), v.y(pose.cy), w, h, RING_STEP_M, RING_MIN_PX);
+
       // 2. Planned path (/plan)
       if (plan.length > 1) {
         ctx.setLineDash([7, 6]); ctx.strokeStyle = COLORS.acc; ctx.lineWidth = 2.5;
@@ -918,7 +925,6 @@ export default {
       }
 
       // 6. Standard vehicle marker (matches home.js)
-      const pose = vehiclePose(fp, odom);
       if (pose) drawVehicle(ctx, v.x(pose.cx), v.y(pose.cy), Math.PI / 2 - pose.yaw);
 
       // 7. START (0, 0) & PLAN END markers

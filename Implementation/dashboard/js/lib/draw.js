@@ -96,6 +96,30 @@ export function scaleBar(ctx, view, h, metres = 5) {
   ctx.fillText(`${metres} m`, 10, h - 17);
 }
 
+/** Dashed distance rings around (cx, cy) in canvas px, every `step` m (5 × step when rings would sit closer than
+ *  minPx on screen), each labelled ("10 m") at the first place on the ring that fits inside the canvas: diagonals
+ *  (upper right first), then left, up, right, down; skipped if none fits. Used by Home and Map. */
+export function distanceRings(ctx, view, cx, cy, w, h, step = 10, minPx = 14) {
+  if (step * view.k < minPx) step *= 5;
+  const far = Math.max(Math.hypot(cx, cy), Math.hypot(w - cx, cy), Math.hypot(cx, h - cy), Math.hypot(w - cx, h - cy)) / view.k;
+  ctx.save();
+  ctx.font = "600 11px Inter, 'Segoe UI', Helvetica, Arial, sans-serif";
+  for (let r = step; r <= far; r += step) {
+    const px = r * view.k;
+    ctx.beginPath(); ctx.arc(cx, cy, px, 0, 2 * Math.PI);
+    ctx.strokeStyle = "rgba(95, 102, 112, 0.45)"; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.stroke(); ctx.setLineDash([]);
+    const t = `${r} m`, tw = ctx.measureText(t).width, d = Math.SQRT1_2;
+    const spot = [[d, -d], [-d, -d], [d, d], [-d, d], [-1, 0], [0, -1], [1, 0], [0, 1]].map(([ux, uy]) => [
+      cx + ux * px + (ux > 0.1 ? 3 : ux < -0.1 ? -3 - tw : -tw / 2), cy + uy * px + (uy > 0.1 ? 13 : uy < -0.1 ? -3 : 4)])
+      .find(([x, y]) => x >= 4 && x + tw <= w - 4 && y >= 14 && y <= h - 30);
+    if (!spot) continue;
+    const [lx, ly] = spot;
+    ctx.lineWidth = 3; ctx.strokeStyle = "#fff"; ctx.lineJoin = "round"; ctx.strokeText(t, lx, ly);
+    ctx.fillStyle = COLORS.mute; ctx.fillText(t, lx, ly);
+  }
+  ctx.restore();
+}
+
 /** Coalesce redraw requests: run fn at most every `minMs` (default ~30 fps). Uses a timer, not
  *  requestAnimationFrame, so panels also update in background tabs and embedded views. */
 export function redrawer(fn, minMs = 33) {

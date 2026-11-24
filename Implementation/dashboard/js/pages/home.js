@@ -6,8 +6,10 @@ import { cameraSrc, yawFromQuaternion } from "../../../client/cavs-client.js";
 import { clock, num, ms, escapeHtml, diagTone } from "../lib/format.js";
 import { onEvents, clearEvents } from "../state.js";
 import { getSetting, onSettingChange } from "../settings.js";
-import { COLORS, gridCanvas, occupancyRGB, fitView, bounds, fitCanvas, polyline, scaleBar, redrawer } from "../lib/draw.js";
+import { COLORS, gridCanvas, occupancyRGB, fitView, bounds, fitCanvas, polyline, scaleBar, redrawer, distanceRings } from "../lib/draw.js";
 
+const RING_STEP_M = 10;      // distance rings around the vehicle in the navigation view
+const RING_MIN_PX = 14;      // closer than this on screen: rings every 5 × RING_STEP_M instead
 const NAV_MIN_SPAN_M = 30;  // navigation view is at least this wide, so the vehicle stays small before a plan or path arrives
 const VEHICLE_MARKER_PX = [24, 15];   // occupancy grid vehicle marker, length × width in pixels (not to scale; feedback 17 Nov 2026)
 
@@ -87,7 +89,7 @@ const TEMPLATE = `
 
     <section class="panel"><h3>⌖ NAVIGATION</h3>
       <div class="mapbox"><canvas id="nav"></canvas></div>
-      <div class="legend"><span><i></i>driven</span><span><i class="dash"></i>planned</span><span><i class="sq"></i>costmap obstacle</span><span>${vehicleIcon(13, 5)}vehicle</span></div>
+      <div class="legend"><span><i></i>driven</span><span><i class="dash"></i>planned</span><span><i class="sq"></i>costmap obstacle</span><span><i class="ring"></i>distance from vehicle</span><span>${vehicleIcon(13, 5)}vehicle</span></div>
     </section>
   </div>
 
@@ -216,6 +218,10 @@ export default {
         ctx.drawImage(globalGrid.canvas, v.x(g.origin_x), v.y(g.origin_y + g.height * g.resolution),
                       g.width * g.resolution * v.k, g.height * g.resolution * v.k);
       }
+      // distance rings around the vehicle, every RING_STEP_M (fewer when they would sit too close together),
+      // under the plan and path (lib/draw.js distanceRings, shared with the Map page)
+      const pose = vehiclePose(fp, cavs.latest("/mtx/odom"));
+      if (pose) distanceRings(ctx, v, v.x(pose.cx), v.y(pose.cy), w, h, RING_STEP_M, RING_MIN_PX);
       if (plan.length) {
         ctx.setLineDash([7, 6]); ctx.strokeStyle = COLORS.acc; ctx.lineWidth = 2.5;
         polyline(ctx, v, plan); ctx.stroke(); ctx.setLineDash([]);
@@ -226,7 +232,6 @@ export default {
       }
       // vehicle first (same marker as the occupancy grid, not to scale, pointing the way it faces),
       // so the START / PLAN END markers and labels stay readable on top
-      const pose = vehiclePose(fp, cavs.latest("/mtx/odom"));
       if (pose) drawVehicle(ctx, v.x(pose.cx), v.y(pose.cy), Math.PI / 2 - pose.yaw);
       // start (odom origin) and end of plan; labels get a white outline so they read over anything
       const label = (t, x, y) => { ctx.lineWidth = 3.5; ctx.strokeStyle = "#fff"; ctx.lineJoin = "round"; ctx.strokeText(t, x, y); ctx.fillStyle = COLORS.ink; ctx.fillText(t, x, y); };

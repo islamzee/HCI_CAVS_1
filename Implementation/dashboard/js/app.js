@@ -11,6 +11,7 @@ import sensors from "./pages/sensors.js";
 import logs from "./pages/logs.js";
 import faults from "./pages/faults.js";
 import settings from "./pages/settings.js";
+import { mountEstop } from "./estop.js";
 
 const PAGES = { home, map, sensors, logs, faults, settings };
 const $ = (id) => document.getElementById(id);
@@ -35,6 +36,8 @@ function setStatus(el, text, tone) {
   el.textContent = text;
   el.className = tone;
 }
+
+mountEstop($("estopBtn"));   // shown, but not connected to the vehicle (see js/estop.js)
 
 cavs.onStatus((s) => {
   const el = $("conn");
