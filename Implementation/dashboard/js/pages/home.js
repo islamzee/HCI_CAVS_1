@@ -296,7 +296,7 @@ export default {
       // Reference lines fixed to the panel (they don't move or turn), centred on the vehicle:
       // thin every cell (0.2 m) while cells are at least 4 px, bold every 1, 5 or 10 m (at least 20 px apart).
       // Only the recorded cells move as the vehicle drives.
-      const boldM = [1, 5, 10, 20].find((m) => m * k >= 20) || 50;
+      const boldM = pose ? margin : ([1, 5, 10, 20].find((m) => m * k >= 20) || 50);
       const thin = res * k >= 4, step = thin ? res * k : boldM * k;
       const perBold = Math.round(boldM / (thin ? res : boldM)), n = Math.ceil(Math.max(w, h) / 2 / step) + 1;
       for (let i = -n; i <= n; i++) {
