@@ -60,15 +60,14 @@ function restoreRuns() { deleted = new Set(); saveDeleted(); deletedListeners.fo
 // ================================================================ formatting (display only)
 const TZ = "America/Chicago";
 const dateFmt = new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "2-digit", day: "2-digit", year: "numeric" });
-const timeFmt = new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true });
 const pad = (n) => String(n).padStart(2, "0");
 
 const runDate = (ns) => dateFmt.format(new Date(ns / 1e6));                       // "09/11/2026"
-const runStart = (ns) => timeFmt.format(new Date(ns / 1e6)).toLowerCase();        // "11:45:48 am"
+const runStart = (ns) => clock(ns / 1e9).toLowerCase();                           // "11:45:48" or "11:45:48 am" (time format setting)
 const runLength = (ns) => { const s = Math.round(ns / 1e9); return `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`; };
 const lineTime = (stamp) => {                                                     // "11:45:59.3"
   const tenths = Math.floor(stamp * 10 + 1e-4);
-  return `${clock(Math.floor(tenths / 10))}.${tenths % 10}`;
+  return clock(Math.floor(tenths / 10), `.${tenths % 10}`);
 };
 
 // ================================================================ filters (kept while you switch pages)

@@ -5,7 +5,7 @@
 import { cameraSrc, yawFromQuaternion } from "../../../client/cavs-client.js";
 import { clock, num, ms, escapeHtml, diagTone } from "../lib/format.js";
 import { onEvents, clearEvents } from "../state.js";
-import { getSetting, onSettingChange } from "../settings.js";
+import { getSetting, onSettingChange, gridFactor } from "../settings.js";
 import { COLORS, gridCanvas, occupancyRGB, fitView, bounds, fitCanvas, polyline, scaleBar, redrawer, distanceRings } from "../lib/draw.js";
 
 const RING_STEP_M = 10;      // distance rings around the vehicle in the navigation view
@@ -83,7 +83,7 @@ const TEMPLATE = `
           <span id="camXmsg">No image available</span>
         </div>
         <img id="camImg" alt="" hidden>
-        <span class="tag l" id="camL">CAM 2 · /cam_2/image_raw</span><span class="tag r" id="camR">no image</span>
+        <span class="tag l" id="camL"></span><span class="tag r" id="camR">no image</span>
       </div>
     </section>
 
@@ -171,9 +171,9 @@ export default {
       home.querySelector(".row2").style.gridTemplateColumns = `${SIDE_COL}px ${Math.round(occW)}px 1fr`;
     };
 
-    // ------------------------------------------------------------ camera (default CAM 2, C-013)
+    // ------------------------------------------------------------ camera (starts on the "Default camera" setting, CAM 1 unless changed)
     root.querySelectorAll("#camBtns .btn").forEach((b) => (b.onclick = () => cavs.setCamera(+b.dataset.cam)));
-    let camId = 2, camHz = 2, camTimer = null;
+    let camId = getSetting("defaultCamera"), camHz = 2, camTimer = null;
     // Blank-image icon until a frame arrives, after switching camera, or when frames stop
     // (none for 3 frame intervals, at least 3 s).
     const noImage = (msg) => {
@@ -191,6 +191,7 @@ export default {
       root.querySelectorAll("#camBtns .btn").forEach((b) => b.classList.toggle("on", +b.dataset.cam === camId));
       set("camL", `CAM ${camId} · /cam_${camId}/image_raw`);
     };
+    showCam({});   // label and button for the default camera until the bridge answers
     offs.push(cavs.onSettings(showCam));
     for (const c of [0, 1, 2]) on(`/cam_${c}/image_raw`, (d) => {
       if (c !== camId) return;
@@ -310,8 +311,11 @@ export default {
       scaleBar(ctx, { k }, h, boldM);
       $("gridMeta").textContent = "";                                    // legend says the rest; scale bar shows 1 m
     });
-    on("/local_costmap/voxel_layer", async (d) => { voxel = await gridCanvas(d, occupancyRGB); drawGrid(); });
-    offs.push(onSettingChange((key) => key === "gridMarginM" && drawGrid()));
+    // drawn cell size follows the "Occupancy grid resolution" setting (js/settings.js gridFactor; recorded by default)
+    let voxelMsg = null;
+    const decodeVoxel = async () => { const d = voxelMsg; if (!d) return; const v = await gridCanvas(d, occupancyRGB, gridFactor(d.resolution)); if (d === voxelMsg) { voxel = v; drawGrid(); } };
+    on("/local_costmap/voxel_layer", (d) => { voxelMsg = d; decodeVoxel(); });
+    offs.push(onSettingChange((key) => { if (key === "gridMarginM") drawGrid(); if (key === "gridCellM") decodeVoxel(); }));
     on("/local_costmap/published_footprint", drawGrid);
     on("/mtx/odom", drawGrid);
 
@@ -327,7 +331,7 @@ export default {
     $("clear").onclick = clearEvents;
     offs.push(onEvents(renderEvents));
     renderEvents();
-    offs.push(cavs.onRestart(() => { globalGrid = null; voxel = null; drawNav(); }));
+    offs.push(cavs.onRestart(() => { globalGrid = null; voxel = null; voxelMsg = null; drawNav(); }));
 
     // redraw canvases when the window changes size
     const ro = new ResizeObserver(() => { layout(); drawNav(); drawGrid(); });

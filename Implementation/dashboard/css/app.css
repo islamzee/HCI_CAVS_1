@@ -4,28 +4,33 @@
   --ink: #1f2328; --mute: #5f6670; --line: #c9cdd2; --rule: #e1e4e8; --bg: #f3f4f6; --panel: #fff;
   --ok: #2f9e44; --ok-bg: #e9f6ec; --warn: #d49100; --warn-bg: #fdf6e3; --bad: #d64545; --bad-bg: #fdecec;
   --acc: #2f6fdb; --acc-bg: #e7effc; --chip: #f4f5f7;
+  --bar: #dde3ea; --brand: #5d1725;   /* header + bottom menu tint, MSU maroon (matches the banner) */
   --font: Inter, "Segoe UI", Helvetica, Arial, sans-serif;
   --mono: ui-monospace, Consolas, Menlo, monospace;
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); }
-.screen { height: 100vh; min-height: 760px; min-width: 1280px; padding: 14px 20px; display: flex; flex-direction: column; gap: 14px; }
+.screen { height: 100vh; min-height: 760px; min-width: 1280px; padding: 0; display: flex; flex-direction: column; gap: 14px; }
 
 /* colour helpers */
 .ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); } .mute { color: var(--mute); } .acc { color: var(--acc); }
 .mono { font-family: var(--mono); }
 
 /* header */
-.hdr { display: flex; align-items: center; gap: 30px; background: var(--panel); border: 1.5px solid var(--line); border-radius: 8px; padding: 8px 18px; height: 80px; flex: none; }
+/* Header and bottom menu frame the page: edge to edge, tinted, with a maroon line toward the content. */
+.hdr { display: flex; align-items: center; gap: 30px; background: var(--bar); border-bottom: 4px solid var(--brand); padding: 8px 20px; height: 84px; flex: none; }
 .brand { height: 60px; width: auto; display: block; }
 .title { flex: 1; font-size: 28px; font-weight: 700; white-space: nowrap; }
 .title small { display: block; font-size: 13px; font-weight: 500; color: var(--mute); margin-top: 3px; }
 .conn { font-weight: 700; color: var(--mute); } .conn.live { color: var(--bad); }
 .hs { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
 .hs b { font-size: 16px; font-weight: 600; }
+.hs span { white-space: nowrap; }
+/* Narrower landscape screens (the MTX: 1024 x 768 at 67 %, about 1530 px): tighter header so labels don't wrap */
+@media (max-width: 1600px) { .hdr { gap: 18px; } .brand { height: 48px; } .title { font-size: 25px; } }
 /* e-stop button (js/estop.js): red when connected; disabled "off" look until it is wired to the vehicle */
-.estop { display: flex; align-items: center; gap: 8px; margin-left: -14px; padding: 8px 14px; border-radius: 8px; cursor: pointer;
+.estop { display: flex; align-items: center; gap: 8px; white-space: nowrap; flex: none; margin-left: -14px; padding: 8px 14px; border-radius: 8px; cursor: pointer;
   font: 800 15px/1.1 var(--font); letter-spacing: .06em; color: #fff; background: var(--bad); border: 2px solid var(--bad); }
 .estop svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
 .estop small { display: none; font-size: 10.5px; font-weight: 600; letter-spacing: 0; text-transform: none; margin-top: 2px; }
@@ -37,14 +42,15 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f
 .clock small { display: block; font-family: var(--font); font-size: 12.5px; font-weight: 500; color: var(--mute); margin-top: 4px; }
 
 /* page area */
-.page { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.page { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 20px; }
 
 /* bottom nav */
-.bottom { display: flex; align-items: center; gap: 14px; background: var(--panel); border: 1.5px solid var(--line); border-radius: 8px; height: 84px; padding: 0 14px; flex: none; }
-.bottom a { padding: 18px 30px; font-size: 19px; font-weight: 700; border-radius: 6px; color: var(--ink); text-decoration: none; }
-.bottom a:hover { background: var(--chip); }
-.bottom a.on { background: var(--acc-bg); color: var(--acc); }
-.alert { margin-left: auto; border-left: 1.5px solid var(--line); padding-left: 40px; font-size: 16px; min-width: 320px; height: 56px; display: flex; align-items: center; }
+.bottom { display: flex; align-items: center; gap: 14px; background: var(--bar); border-top: 4px solid var(--brand); height: 88px; padding: 0 20px; flex: none; }
+.bottom a { display: inline-flex; align-items: center; gap: 9px; padding: 16px 26px; font-size: 19px; font-weight: 700; border-radius: 6px; color: var(--ink); text-decoration: none; }
+.bottom a svg { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bottom a:hover { background: rgba(255, 255, 255, .6); }
+.bottom a.on { background: var(--brand); color: #fff; }
+.alert { margin-left: auto; border-left: 1.5px solid #b9c1cb; padding-left: 40px; font-size: 16px; min-width: 320px; height: 56px; display: flex; align-items: center; }
 .alert.warn { color: var(--warn); font-weight: 600; } .alert.bad { color: var(--bad); font-weight: 600; }
 
 /* panels (use these in your page) */
@@ -98,7 +104,7 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f
 .lleg .meta { margin-top: 14px; color: var(--mute); font-size: 13px; line-height: 1.5; overflow-wrap: break-word; }
 
 .events { flex: 1; min-height: 0; overflow-y: auto; }
-.er { display: grid; grid-template-columns: 76px 70px 150px 1fr; gap: 8px; align-items: center; font-size: 13.5px; padding: 7px 2px; border-bottom: 1.5px solid var(--rule); }
+.er { display: grid; grid-template-columns: 92px 70px 150px 1fr; gap: 8px; align-items: center; font-size: 13.5px; padding: 7px 2px; border-bottom: 1.5px solid var(--rule); }
 .er .t { font-family: var(--mono); }
 .er .n { font-family: var(--mono); font-size: 12.5px; color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .er .m { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

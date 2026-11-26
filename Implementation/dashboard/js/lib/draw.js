@@ -29,9 +29,11 @@ export function occupancyRGB(v) {
 /**
  * Decode a grid message into an offscreen canvas (one pixel per cell, y up: grid row 0 at the bottom).
  * Resolves to { canvas, grid } where grid has width, height, resolution, origin_x, origin_y, values.
+ * factor > 1 draws larger cells (see coarsenGrid).
  */
-export async function gridCanvas(msg, rgb = costmapRGB) {
-  const g = await decodeGrid(msg);
+export async function gridCanvas(msg, rgb = costmapRGB, factor = 1) {
+  let g = await decodeGrid(msg);
+  if (factor > 1) g = coarsenGrid(g, factor);
   const c = document.createElement("canvas");
   c.width = g.width; c.height = g.height;
   const ctx = c.getContext("2d");
@@ -46,6 +48,23 @@ export async function gridCanvas(msg, rgb = costmapRGB) {
   }
   ctx.putImageData(img, 0, 0);
   return { canvas: c, grid: g };
+}
+
+/**
+ * Display-only larger cells: each factor × factor block of recorded cells becomes one cell holding the highest
+ * recorded value in the block (occupied if any recorded cell is occupied), unknown only if every cell is unknown.
+ * Nothing is averaged or made up; obstacles are never hidden. Used for the "Occupancy grid resolution" setting.
+ */
+export function coarsenGrid(g, factor) {
+  const W = Math.ceil(g.width / factor), H = Math.ceil(g.height / factor), values = new Int8Array(W * H).fill(-1);
+  for (let row = 0; row < g.height; row++) {
+    const R = Math.floor(row / factor) * W;
+    for (let col = 0; col < g.width; col++) {
+      const v = g.values[row * g.width + col], i = R + Math.floor(col / factor);
+      if (v > values[i]) values[i] = v;
+    }
+  }
+  return { ...g, width: W, height: H, resolution: g.resolution * factor, values };
 }
 
 /** View that maps world metres to canvas pixels, fitting the box [x0..x1] × [y0..y1] into w × h. */

@@ -12,6 +12,7 @@ import logs from "./pages/logs.js";
 import faults from "./pages/faults.js";
 import settings from "./pages/settings.js";
 import { mountEstop } from "./estop.js";
+import { getSetting, onSettingChange } from "./settings.js";
 
 const PAGES = { home, map, sensors, logs, faults, settings };
 const $ = (id) => document.getElementById(id);
@@ -38,6 +39,18 @@ function setStatus(el, text, tone) {
 }
 
 mountEstop($("estopBtn"));   // shown, but not connected to the vehicle (see js/estop.js)
+
+// Default camera and camera frame rate (Settings): the bridge starts every connection on CAM 2 at 2 FPS, so ask
+// for the chosen ones on each (re)connect, and apply them at once when a setting changes.
+cavs.onStatus((s) => {
+  if (s !== "open") return;
+  cavs.setCamera(getSetting("defaultCamera"));
+  cavs.setCameraRate(getSetting("cameraHz"));
+});
+onSettingChange((key, value) => {
+  if (key === "defaultCamera") cavs.setCamera(value);
+  if (key === "cameraHz") cavs.setCameraRate(value);
+});
 
 cavs.onStatus((s) => {
   const el = $("conn");

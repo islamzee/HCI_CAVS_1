@@ -5,7 +5,8 @@
 //   const m = getSetting("gridMarginM");
 //   const off = onSettingChange((key, value) => { ... });   // call off() in your page cleanup
 
-// Each setting has label, help, default, unit (optional), section ("settings" | "faults"), and EITHER
+// Each setting has label, help, default, unit (optional), section ("settings" | "faults"),
+// group (Settings section only: "camera" | "grid" | "time", the heading it is listed under), and EITHER
 //   options: [...] + optionLabels (optional)   → round choice buttons on the Settings page
 //   min, max, step                             → a number box on the Settings page
 // Fault settings also have level ("CRITICAL" | "WARNING") and tone ("bad" | "warn") for the coloured dot.
@@ -14,18 +15,49 @@ const KEY = "cavs.settings.v1";
 
 /** Every setting, its default and its allowed values. Add new settings here. */
 export const SETTINGS = {
+  gridCellM: {
+    section: "settings",
+    group: "grid",
+    label: "Occupancy grid resolution",
+    help: "Cell size drawn on the Home occupancy grid. A larger cell is drawn occupied if any recorded cell inside it is occupied, so obstacles are never hidden.",
+    options: [0, 0.4, 0.6, 1],
+    optionLabels: { 0: "Recorded", 0.4: "0.4 m", 0.6: "0.6 m", 1: "1 m" },
+    default: 0,
+  },
   gridMarginM: {
     section: "settings",
+    group: "grid",
     label: "Occupancy grid view",
     help: "Metres shown around the vehicle on the Home occupancy grid. Default 1 m (client feedback, 10 Nov 2026).",
     default: 1,
     options: [1, 2, 5, 10, 15],
     unit: "m",
   },
+  cameraHz: {
+    section: "settings",
+    group: "camera",
+    label: "Camera frame rate",
+    help: "Camera frames per second sent to this browser, 0.2 to 10 (C-011). Higher uses more network. Default 2 FPS.",
+    unit: "FPS",
+    min: 0.2,
+    max: 10,
+    step: 0.1,
+    default: 2,
+  },
+  defaultCamera: {
+    section: "settings",
+    group: "camera",
+    label: "Default camera",
+    help: "Camera shown when the dashboard opens. The CAM buttons on Home still switch it for the moment. Default CAM 1 (team choice, 25 Nov 2026; was CAM 2 per C-013).",
+    options: [0, 1, 2],
+    optionLabels: { 0: "CAM 0", 1: "CAM 1", 2: "CAM 2" },
+    default: 1,
+  },
   timeFormat: {
     section: "settings",
+    group: "time",
     label: "System time format",
-    help: "12 or 24-hour clock.",
+    help: "12 or 24-hour clock, used on every page. Beside it: the bag time, from the recording (read-only).",
     options: [12, 24],
     optionLabels: { 12: "12 HR", 24: "24 HR" },
     default: 24,
@@ -102,6 +134,12 @@ function save() {
 let saved = load();
 const handlers = new Set();
 const notify = (key) => handlers.forEach((fn) => fn(key, getSetting(key)));
+
+/** How many recorded cells per drawn cell (each way) for the "Occupancy grid resolution" setting. */
+export function gridFactor(recordedRes) {
+  const m = getSetting("gridCellM");
+  return m && recordedRes ? Math.max(1, Math.round(m / recordedRes)) : 1;
+}
 
 export function getSetting(key) {
   return key in saved ? saved[key] : SETTINGS[key]?.default;

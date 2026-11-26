@@ -1,14 +1,22 @@
 // Display formatting only (units, rounding, clock time). No values are calculated here.
 // Author: Zeenat Islam
 
+import { getSetting } from "../settings.js";
+
 const TZ = "America/Chicago";   // the run was recorded at CAVS, Starkville MS
 
-const timeFmt = new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
+const timeFmt = {
+  24: new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }),
+  12: new Intl.DateTimeFormat("en-US", { timeZone: TZ, hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true }),
+};
 const dateFmt = new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "short", day: "numeric", year: "numeric", timeZoneName: "short" });
 
-/** Recorded stamp (seconds since 1970) as clock time, e.g. "11:46:02". */
-export function clock(stamp) {
-  return stamp == null || stamp < 1e9 ? "--:--:--" : timeFmt.format(new Date(stamp * 1000));
+/** Recorded stamp (seconds since 1970) as clock time in the "System time format" setting, e.g. "16:46:02" or
+ *  "4:46:02 PM". `frac` (e.g. ".3") goes right after the seconds. */
+export function clock(stamp, frac = "") {
+  if (stamp == null || stamp < 1e9) return "--:--:--";
+  const t = timeFmt[getSetting("timeFormat")] || timeFmt[24];
+  return t.format(new Date(stamp * 1000)).replace(/(\d\d)(\D*)$/, `$1${frac}$2`);
 }
 
 /** Recorded stamp as date, e.g. "Sep 11, 2026 CDT". */
