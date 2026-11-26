@@ -28,7 +28,7 @@ export const SETTINGS = {
     section: "settings",
     group: "grid",
     label: "Occupancy grid view",
-    help: "Metres shown around the vehicle on the Home occupancy grid. Default 1 m (client feedback, 10 Nov 2026).",
+    help: "Metres shown around the vehicle on the Home occupancy grid. Default 1 m.",   // default from client feedback, 10 Nov 2026
     default: 1,
     options: [1, 2, 5, 10, 15],
     unit: "m",
@@ -37,7 +37,7 @@ export const SETTINGS = {
     section: "settings",
     group: "camera",
     label: "Camera frame rate",
-    help: "Camera frames per second sent to this browser, 0.2 to 10 (C-011). Higher uses more network. Default 2 FPS.",
+    help: "Camera frames per second sent to this browser, 0.2 to 10. Higher uses more network. Default 2 FPS.",   // range: C-011
     unit: "FPS",
     min: 0.2,
     max: 10,
@@ -48,7 +48,7 @@ export const SETTINGS = {
     section: "settings",
     group: "camera",
     label: "Default camera",
-    help: "Camera shown when the dashboard opens. The CAM buttons on Home still switch it for the moment. Default CAM 1 (team choice, 25 Nov 2026; was CAM 2 per C-013).",
+    help: "Camera shown when the dashboard opens. The CAM buttons on Home still switch it for the moment. Default CAM 1.",   // team choice 25 Nov 2026; was CAM 2 per C-013
     options: [0, 1, 2],
     optionLabels: { 0: "CAM 0", 1: "CAM 1", 2: "CAM 2" },
     default: 1,
